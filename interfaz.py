@@ -7,6 +7,7 @@ raiz=Tk()
 raiz.title("Epilepsy Detection")
 raiz.resizable(0,0)
 #raiz.iconbitmap("/home/naty/Pictures/cerebro_azul_icono.ico")
+# Comentario de prueba
 raiz.geometry("1024x768")
 raiz.config(bg="#DFEBE9")
 

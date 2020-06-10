@@ -1,5 +1,6 @@
 from tkinter import *
-from PIL import Image
+#from PIL import Image
+import os
 
 #------------  PANTALLA INICIAL   ---------------------------------------------
 
@@ -60,12 +61,16 @@ Boton_close=Button(raiz, text="Close",
 
 
 #--------------------  IMAGENES Y LOGOTIPOS  -----------------------------------
-logo=PhotoImage(file="/home/naty/Pictures/cerebrito.png")
-ufmg=PhotoImage(file="/home/naty/Pictures/ufmg_logo.png")
-labbio=PhotoImage(file="/home/naty/Pictures/labbio_logo.png")
-Label(raiz, image=logo,bg="#DFEBE9").place(x=64,y=55)
-Label(raiz, image=ufmg,bg="#DFEBE9").place(x=670,y=691)
-Label(raiz, image=labbio,bg="#DFEBE9").place(x=840,y=686)
+fileDir = os.path.dirname(os.path.realpath('__file__'))
+logo_cerebro = os.path.join(fileDir, 'logos/cerebrito.png')
+logo_ufmg= os.path.join(fileDir, 'logos/ufmg_logo.png')
+logo_labbio=os.path.join(fileDir, 'logos/labbio_logo.png')
+logo_cerebro=PhotoImage(file=logo_cerebro)
+logo_ufmg=PhotoImage(file=logo_ufmg)
+logo_labbio=PhotoImage(file=logo_labbio)
+Label(raiz, image=logo_cerebro,bg="#DFEBE9").place(x=64,y=55)
+Label(raiz, image=logo_ufmg,bg="#DFEBE9").place(x=670,y=691)
+Label(raiz, image=logo_labbio,bg="#DFEBE9").place(x=840,y=686)
 
 raiz.mainloop()
 

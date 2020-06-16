@@ -42,7 +42,7 @@ logo_labbio_resized2 = ImageTk.PhotoImage(resized_labbio2)
 
 # -----------------  Open Information Screen ------------------------------
 def info():
-    raiz.withdraw()
+    #raiz.withdraw()
     Ventana_info = Toplevel()
     Ventana_info.geometry("1024x768")
     Ventana_info.config(bg="#DFEBE9")
@@ -53,31 +53,31 @@ def info():
     titulo_info = Label(Ventana_info, text="About Project",
                         font=("AvantGarde", 40, "bold"), bg="#DFEBE9",
                         fg="#14787A").place(x=10, y=20)
-    Boton_home = Button(Ventana_info, text="Home", command=Ventana_info.quit,
+    Boton_home = Button(Ventana_info, text="Home", command=Ventana_info.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=660, y=700)
 
 
 # -----------------  Open Add Patient Screen ------------------------------
 def add_patient():
-    raiz.withdraw()
+    #raiz.withdraw()
     Ventana_add = Toplevel()
     Ventana_add.geometry("1024x768")
     Ventana_add.config(bg="#DFEBE9")
     Ventana_add.title("Add Patient")
-    Boton_home = Button(Ventana_add, text="Home",
+    Boton_home = Button(Ventana_add, text="Home", command=Ventana_add.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
 
 
 # -----------------  Open Open Patient Screen ------------------------------
 def open_patient():
-    raiz.withdraw()
+    #raiz.withdraw()
     Ventana_open = Toplevel()
     Ventana_open.geometry("1024x768")
     Ventana_open.config(bg="#DFEBE9")
     Ventana_open.title("Open Patient")
-    Boton_home = Button(Ventana_open, text="Home",
+    Boton_home = Button(Ventana_open, text="Home", command=Ventana_open.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
 

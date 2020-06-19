@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import ttk
+from tkinter.filedialog import askopenfile
 from PIL import Image, ImageTk
 
 # ------------  HOME SCREEN   ---------------------------------------------
@@ -65,6 +67,32 @@ def add_patient():
     Ventana_add.geometry("1024x768")
     Ventana_add.config(bg="#DFEBE9")
     Ventana_add.title("Add Patient")
+    a = Label(Ventana_add ,text = "File Name").grid(row = 0,column = 0)
+    b = Label(Ventana_add ,text = "Patient Age").grid(row = 1,column = 0)
+    c = Label(Ventana_add ,text = "F or M").grid(row = 2,column = 0)
+    d = Label(Ventana_add ,text = "Another information").grid(row = 3,column = 0)
+    a1 = Entry(Ventana_add).grid(row = 0,column = 1)
+    b1 = Entry(Ventana_add).grid(row = 1,column = 1)
+    c1 = Entry(Ventana_add).grid(row = 2,column = 1)
+    d1 = Entry(Ventana_add).grid(row = 3,column = 1)
+    btn2 = ttk.Button(Ventana_add ,text="Submit").grid(row=10,column=0)
+    #btn2 = ttk.Button(Ventana_add, text ='Open', command = lambda:open_file(),
+    #                font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
+    #                width="15", height="1", cursor="hand2").place(x=700, y=359)
+   # btn.pack(side = TOP, pady = 10) 
+    def clicked():
+        res = "Welcome to " + txt.get()
+        lbl.configure(text= res)
+    # This function will be used to open 
+    # file in read mode and only Python files 
+    # will be opened 
+    def open_file(): 
+        file = askopenfile(mode ='r', filetypes =[('EGG', '*.py')]) 
+        if file is not None: 
+            content = file.read() 
+            print(content) 
+    
+    btn = ttk.Button(Ventana_add ,text="Add file", command = lambda:open_file()).grid(row=4,column=0)
     Boton_home = Button(Ventana_add, text="Home", command=Ventana_add.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)

@@ -67,15 +67,18 @@ def add_patient():
     Ventana_add.geometry("1024x768")
     Ventana_add.config(bg="#DFEBE9")
     Ventana_add.title("Add Patient")
-    a = Label(Ventana_add ,text = "File Name").grid(row = 0,column = 0)
-    b = Label(Ventana_add ,text = "Patient Age").grid(row = 1,column = 0)
-    c = Label(Ventana_add ,text = "F or M").grid(row = 2,column = 0)
-    d = Label(Ventana_add ,text = "Another information").grid(row = 3,column = 0)
-    a1 = Entry(Ventana_add).grid(row = 0,column = 1)
-    b1 = Entry(Ventana_add).grid(row = 1,column = 1)
-    c1 = Entry(Ventana_add).grid(row = 2,column = 1)
-    d1 = Entry(Ventana_add).grid(row = 3,column = 1)
-    btn2 = ttk.Button(Ventana_add ,text="Submit").grid(row=10,column=0)
+    #create a Form label 
+    heading = Label(Ventana_add, text="Form",font=("AvantGarde", 40, "bold")) 
+    a = Label(Ventana_add ,text = "File Name",font=("AvantGarde", 20, "bold")).grid(row = 2,column = 6)
+    b = Label(Ventana_add ,text = "Patient Age",font=("AvantGarde", 20, "bold")).grid(row = 6,column = 6)
+    c = Label(Ventana_add ,text = "F or M",font=("AvantGarde", 20, "bold")).grid(row = 10,column = 6)
+    d = Label(Ventana_add ,text = "Another information",font=("AvantGarde", 20, "bold")).grid(row = 16,column = 6)
+    heading.grid(row=1, column=8) 
+    a1 = Entry(Ventana_add).grid(row = 2,column = 14)
+    b1 = Entry(Ventana_add).grid(row = 6,column = 14)
+    c1 = Entry(Ventana_add).grid(row = 10,column = 14)
+    d1 = Entry(Ventana_add).grid(row = 16,column = 14)
+    btn2 = ttk.Button(Ventana_add ,text="Submit").grid(row=40,column=8)
     #btn2 = ttk.Button(Ventana_add, text ='Open', command = lambda:open_file(),
     #                font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
     #                width="15", height="1", cursor="hand2").place(x=700, y=359)
@@ -92,7 +95,7 @@ def add_patient():
             content = file.read() 
             print(content) 
     
-    btn = ttk.Button(Ventana_add ,text="Add file", command = lambda:open_file()).grid(row=4,column=0)
+    btn = ttk.Button(Ventana_add ,text="Add file", command = lambda:open_file())
     Boton_home = Button(Ventana_add, text="Home", command=Ventana_add.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)

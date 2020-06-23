@@ -69,23 +69,148 @@ def add_patient():
     Ventana_add = Toplevel()
     Ventana_add.geometry("1024x768")
     Ventana_add.config(bg="#DFEBE9")
-    Ventana_add.title("Add Patient")
+    Ventana_add.title("Patient Registration Form")
 
+    reg = Frame(Ventana_add)
 
+    Fullname = StringVar()
+    Email = StringVar()
+
+    conn = sqlite3.connect('Form.db')
+    with conn:
+        cursor = conn.cursor()
 
     def database():
         name = Fullname.get()
         email = Email.get()
         gender = var.get()
-        branch = c.get()
-        prog = var1.get()+var2.get()+var3.get()
-        cursor.execute('CREATE TABLE IF NOT EXISTS Student ( Fullname TEXT,Email TEXT,Gender TEXT,Branch TEXT,Programming TEXT)')
-        cursor.execute('INSERT INTO Student (Fullname,Email,Gender,Branch,Programming) VALUES(?,?,?,?,?)',(name,email,gender,branch,prog))
+        age = c.get()
+        #prog = var1.get()+var2.get()+var3.get()
+        cursor.execute('CREATE TABLE IF NOT EXISTS Patient ( Fullname TEXT,Email TEXT,Gender TEXT,Age TEXT,Programming TEXT)')
+        cursor.execute('INSERT INTO Patient (Fullname,Email,Gender,Age) VALUES(?,?,?,?)',(name,email,gender,age))
         conn.commit()
-        showinfo( title = "Student Reacord", message = "Data inserted sucessfully")
+        showinfo( title = "Patient Reacord", message = "Data inserted sucessfully")
      
+    def display():
+        cursor.execute('SELECT * FROM Patient')
+        data = cursor.fetchall()
+        print(data)
+        output = ''
+        for x in data:
+            output = output+x[0]+'  '+x[1]+'  '+x[2]+'  '+x[3]+'  '+x[4]+'\n'
+        print(output)
+        return output
+
+    def delete(conn,task):
+        sql ='DELETE FROM Patient WHERE Fullname =?'
+        cursor = conn.cursor()
+        cursor.execute(sql,task)
+        conn.commit()
+        showinfo( title = "Patient Reacord", message = "Data deleted sucessfully")
+        
+    def update(task):
+        sql = 'UPDATE Patient SET Email=?, Gender=?, Age=? WHERE Fullname = ?'
+        cursor.execute(sql,task)
+        conn.commit()
+        showinfo( title = "Patient Reacord", message = "Data updated sucessfully")
+
+    def delete_task():
+        database = r"Form.db"
+        conn = sqlite3.connect(database)
+        name = Fullname.get()
+        with conn:
+            delete_task(conn, name)
+
+    canvas1 = Canvas(Ventana_add, width = 1000, height = 500,  relief = 'raised', bg="white")
+    canvas1.pack()
+
+    label1 = Label(Ventana_add, text='Registration Form')
+    label1.config(font=("bold", 18),bg="white")
+    canvas1.create_window(250, 30, window=label1)
     
-    btn = ttk.Button(Ventana_add ,text="Add file", command = lambda:open_file()).grid(row=4,column=0)
+    label2 = Label(Ventana_add, text='Fullname :')
+    label2.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(65, 90, window=label2)
+
+    entry1 = Entry(Ventana_add, textvar = Fullname, font = (14), borderwidth=2, width = 30)
+    canvas1.create_window(320, 90, window=entry1)
+
+    label3 = Label(Ventana_add, text='E-mail :')
+    label3.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(65, 140, window=label3)
+
+    entry2 = Entry (Ventana_add, textvar = Email, font = (14), borderwidth=2, width = 30) 
+    canvas1.create_window(320, 140, window=entry2)
+
+    label4 = Label(Ventana_add, text='Gender :')
+    label4.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(65, 190, window=label4)
+
+    var = StringVar()
+    rd1 = Radiobutton(Ventana_add ,text="Male" ,padx = 5, variable = var, value = "Male  ")
+    rd1.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(200,190, window = rd1)
+
+    rd2 = Radiobutton(Ventana_add ,text="Female" ,padx = 20, variable = var, value = "Female")
+    rd2.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(350,190, window = rd2)
+
+    label5 = Label(Ventana_add, text='Age :')
+    label5.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(65, 240, window=label5)
+
+    list1 = ['0-21','22-45','46-70','71-']
+    c=StringVar()
+    droplist = OptionMenu(Ventana_add,c,*list1)
+    droplist.config(font=('helvetica',14),bg="white",width = 27)
+    c.set('Select age')
+    canvas1.create_window(320,240, window = droplist)
+
+    label6 = Label(Ventana_add, text='Update file :')
+    label6.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(65, 300, window=label6)
+
+    var = StringVar()
+    rd3 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file())
+    rd3.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(200,300, window = rd3)
+
+    def open_file(): 
+        file = askopenfile(mode ='r', filetypes =[('EGG', '*.py')]) 
+        if file is not None: 
+            content = file.read() 
+            print(content)
+
+    def main():
+        name = Fullname.get()
+        email = Email.get()
+        gender = var.get()
+        age = c.get()
+        #prog = var1.get()+var2.get()+var3.get()    
+        update(name,email,gender,age)
+
+    button1 = Button(Ventana_add, text='   Submit   ',command=database, bg='black', fg='white', font=('helvetica', 12, 'bold'))
+    canvas1.create_window(150, 350, window=button1)
+
+    button2 = Button(Ventana_add, text='   Display   ',command=lambda :(text.delete(1.0,END),text.insert(END,display())), bg='black', fg='white', font=('helvetica', 12, 'bold'))
+    canvas1.create_window(300, 350, window=button2)
+
+    button3 = Button(Ventana_add, text='   Update   ',command=main, bg='black', fg='white', font=('helvetica', 12, 'bold'))
+    canvas1.create_window(150, 450, window=button3)
+
+    button4 = Button(Ventana_add, text='   Delete   ',command=delete_task, bg='black', fg='white', font=('helvetica', 12, 'bold'))
+    canvas1.create_window(300, 450, window=button4)
+
+    text = Text(Ventana_add,  height=25, width=50)
+    text.config(font=('helvetica',12),bg="white")
+    canvas1.create_window(750, 270, window=text)
+
+    lblDisplay = Label(Ventana_add,  text = "Patient Data")
+    lblDisplay.config(font=('Helvetica',18,'bold'),fg='black',justify=CENTER,bg="white")
+    canvas1.create_window(750, 25, window=lblDisplay)
+  
+
+
     Boton_home = Button(Ventana_add, text="Home", command=Ventana_add.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)

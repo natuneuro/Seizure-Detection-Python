@@ -2,6 +2,9 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.filedialog import askopenfile
 from PIL import Image, ImageTk
+import sqlite3
+from tkinter.messagebox import showinfo
+from tkinter.filedialog import askopenfile
 
 # ------------  HOME SCREEN   ---------------------------------------------
 raiz = Tk()
@@ -66,50 +69,9 @@ def add_patient():
     Ventana_add = Toplevel()
     Ventana_add.geometry("1024x768")
     Ventana_add.config(bg="#DFEBE9")
-    Ventana_add.title("Add Patient")
-
-    #create a Form label 
-    heading = Label(Ventana_add, text="Form",font=("AvantGarde", 40, "bold")) 
-    a = Label(Ventana_add ,text = "File Name",font=("AvantGarde", 20, "bold")).grid(row = 2,column = 6)
-    b = Label(Ventana_add ,text = "Patient Age",font=("AvantGarde", 20, "bold")).grid(row = 6,column = 6)
-    c = Label(Ventana_add ,text = "F or M",font=("AvantGarde", 20, "bold")).grid(row = 10,column = 6)
-    d = Label(Ventana_add ,text = "Another information",font=("AvantGarde", 20, "bold")).grid(row = 16,column = 6)
-    heading.grid(row=1, column=8) 
-    a1 = Entry(Ventana_add).grid(row = 2,column = 14)
-    b1 = Entry(Ventana_add).grid(row = 6,column = 14)
-    c1 = Entry(Ventana_add).grid(row = 10,column = 14)
-    d1 = Entry(Ventana_add).grid(row = 16,column = 14)
-    btn2 = ttk.Button(Ventana_add ,text="Submit").grid(row=40,column=8)
-
-    #btn2 = ttk.Button(Ventana_add, text ='Open', command = lambda:open_file(),
-    #                font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
-    #                width="15", height="1", cursor="hand2").place(x=700, y=359)
-   # btn.pack(side = TOP, pady = 10) 
-    def clicked():
-        res = "Welcome to " + txt.get()
-        lbl.configure(text= res)
-    # This function will be used to open 
-    # file in read mode and only Python files 
-    # will be opened 
-    def open_file(): 
-        file = askopenfile(mode ='r', filetypes =[('EGG', '*.py')]) 
-        if file is not None: 
-            content = file.read() 
-            print(content)
-  
-    def database():
-        name = Fullname.get()
-        email = Email.get()
-        gender = var.get()
-        branch = c.get()
-        prog = var1.get()+var2.get()+var3.get()
-        cursor.execute('CREATE TABLE IF NOT EXISTS Student ( Fullname TEXT,Email TEXT,Gender TEXT,Branch TEXT,Programming TEXT)')
-        cursor.execute('INSERT INTO Student (Fullname,Email,Gender,Branch,Programming) VALUES(?,?,?,?,?)',(name,email,gender,branch,prog))
-        conn.commit()
-        showinfo( title = "Student Reacord", message = "Data inserted sucessfully")
-     
+    Ventana_add.title("Patient Registration Form")
     
-    btn = ttk.Button(Ventana_add ,text="Add file", command = lambda:open_file()).grid(row=4,column=0)
+    
     Boton_home = Button(Ventana_add, text="Home", command=Ventana_add.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
@@ -122,9 +84,127 @@ def open_patient():
     Ventana_open.geometry("1024x768")
     Ventana_open.config(bg="#DFEBE9")
     Ventana_open.title("Open Patient")
+    Fullname = StringVar()
+    Email = StringVar()
+
+    # conn = sqlite3.connect('Form.db')
+    # with conn:
+    #     cursor = conn.cursor()
+
+    # def database():
+    #     name = Fullname.get()
+    #     email = Email.get()
+    #     gender = var.get()
+    #     branch = c.get()
+    #     prog = var1.get()+var2.get()+var3.get()
+    #     cursor.execute('CREATE TABLE IF NOT EXISTS Patient ( Fullname TEXT,Email TEXT,Gender TEXT,Branch TEXT,Programming TEXT)')
+    #     cursor.execute('INSERT INTO Patient (Fullname,Email,Gender,Branch,Programming) VALUES(?,?,?,?,?)',(name,email,gender,branch,prog))
+    #     conn.commit()
+    #     showinfo( title = "Patient Reacord", message = "Data inserted sucessfully")
+
+    # def display():
+    #     cursor.execute('SELECT * FROM Patient')
+    #     data = cursor.fetchall()
+    #     print(data)
+    #     output = ''
+    #     for x in data:
+    #         output = output+x[0]+'  '+x[1]+'  '+x[2]+'  '+x[3]+'  '+x[4]+'\n'
+    #     print(output)
+    #     return output
+
+    # def delete(conn,task):
+    #     sql ='DELETE FROM Patient WHERE Fullname =?'
+    #     cursor = conn.cursor()
+    #     cursor.execute(sql,task)
+    #     conn.commit()
+    #     showinfo( title = "Patient Reacord", message = "Data deleted sucessfully")
+    
+    # def update(task):
+    #     sql = 'UPDATE Patient SET Email=?, Gender=?, Branch=?, Programming=? WHERE Fullname = ?'
+    #     cursor.execute(sql,task)
+    #     conn.commit()
+    #     showinfo( title = "Patient Reacord", message = "Data updated sucessfully")
+        
+    # def main():
+    #     name = Fullname.get()
+    #     email = Email.get()
+    #     gender = var.get()
+    #     branch = c.get()
+    #     prog = var1.get()+var2.get()+var3.get()    
+    #     update(name,email,gender,branch,prog)
+
+    # def delete_task():
+    #     database = r"Form.db"
+    #     conn = sqlite3.connect(database)
+    #     name = Fullname.get()
+    #     with conn:
+    #         delete_task(conn, name)
+
     Boton_home = Button(Ventana_open, text="Home", command=Ventana_open.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
+
+    # canvas1 = tk.Canvas(root, width = 1000, height = 500,  relief = 'raised', bg="white")
+    # canvas1.pack()
+
+    # label1 = tk.Label(root, text='Registration Form')
+    # label1.config(font=("bold", 18),bg="white")
+    # canvas1.create_window(250, 30, window=label1)
+
+    # label2 = tk.Label(root, text='Fullname :')
+    # label2.config(font=('helvetica',14),bg="white")
+    # canvas1.create_window(65, 90, window=label2)
+
+    # entry1 = tk.Entry(root, textvar = Fullname, font = (14), borderwidth=2, width = 30)
+    # canvas1.create_window(320, 90, window=entry1)
+
+    # label3 = tk.Label(root, text='E-mail :')
+    # label3.config(font=('helvetica',14),bg="white")
+    # canvas1.create_window(65, 140, window=label3)
+
+    # entry2 = tk.Entry (root, textvar = Email, font = (14), borderwidth=2, width = 30) 
+    # canvas1.create_window(320, 140, window=entry2)
+
+    # label4 = tk.Label(root, text='Gender :')
+    # label4.config(font=('helvetica',14),bg="white")
+    # canvas1.create_window(65, 190, window=label4)
+
+    # var = StringVar()
+    # rd1 = tk.Radiobutton(root ,text="Male" ,padx = 5, variable = var, value = "Male  ")
+    # rd1.config(font=('helvetica',14),bg="white")
+    # canvas1.create_window(200,190, window = rd1)
+
+    # rd2 = tk.Radiobutton(root ,text="Female" ,padx = 20, variable = var, value = "Female")
+    # rd2.config(font=('helvetica',14),bg="white")
+    # canvas1.create_window(350,190, window = rd2)
+
+    # label5 = tk.Label(root, text='Age :')
+    # label5.config(font=('helvetica',14),bg="white")
+    # canvas1.create_window(65, 240, window=label5)
+
+    # list1 = ['0-21','22-45','46-70','71-']
+    # c=StringVar()
+    # droplist = tk.OptionMenu(root,c,*list1)
+    # droplist.config(font=('helvetica',14),bg="white",width = 27)
+    # c.set('Select age')
+    # canvas1.create_window(320,240, window = droplist)
+
+    # label6 = tk.Label(root, text='Update file :')
+    # label6.config(font=('helvetica',14),bg="white")
+    # canvas1.create_window(65, 300, window=label6)
+
+    # var = StringVar()
+    # rd3 = tk.Button(root ,text="File" ,padx = 5, command = lambda:open_file())
+    # rd3.config(font=('helvetica',14),bg="white")
+    # canvas1.create_window(200,300, window = rd3)
+
+
+    # def open_file(): 
+    #     file = askopenfile(mode ='r', filetypes =[('EGG', '*.py')]) 
+    #     if file is not None: 
+    #         content = file.read() 
+    #         print(content)
+    
 
 
 # ---------------  Buttons into home screen ----------------------------------

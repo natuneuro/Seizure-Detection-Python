@@ -189,17 +189,24 @@ def add_patient():
         #prog = var1.get()+var2.get()+var3.get()    
         update(name,email,gender,age)
 
+
+    # Clasificação 
+    # daqui vai para a outra tela, com os resultados
+    # depois pegar os resultados e os dados do paciente e colocar no database
+    # enviar mensagem de registro concluido
+
     button1 = Button(Ventana_add, text='   Submit   ',command=database, bg='black', fg='white', font=('helvetica', 12, 'bold'))
-    canvas1.create_window(150, 350, window=button1)
+    canvas1.create_window(150, 450, window=button1)
 
+    # Colocar esta parte na Open Pat.
     button2 = Button(Ventana_add, text='   Display   ',command=lambda :(text.delete(1.0,END),text.insert(END,display())), bg='black', fg='white', font=('helvetica', 12, 'bold'))
-    canvas1.create_window(300, 350, window=button2)
+    canvas1.create_window(300, 450, window=button2)
 
-    button3 = Button(Ventana_add, text='   Update   ',command=main, bg='black', fg='white', font=('helvetica', 12, 'bold'))
-    canvas1.create_window(150, 450, window=button3)
+    #button3 = Button(Ventana_add, text='   Update   ',command=main, bg='black', fg='white', font=('helvetica', 12, 'bold'))
+    #canvas1.create_window(150, 550, window=button3)
 
-    button4 = Button(Ventana_add, text='   Delete   ',command=delete_task, bg='black', fg='white', font=('helvetica', 12, 'bold'))
-    canvas1.create_window(300, 450, window=button4)
+    #button4 = Button(Ventana_add, text='   Delete   ',command=delete_task, bg='black', fg='white', font=('helvetica', 12, 'bold'))
+    #canvas1.create_window(300, 550, window=button4)
 
     text = Text(Ventana_add,  height=25, width=50)
     text.config(font=('helvetica',12),bg="white")

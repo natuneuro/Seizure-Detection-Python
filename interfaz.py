@@ -121,29 +121,29 @@ def add_patient():
         with conn:
             delete_task(conn, name)
 
-    canvas1 = Canvas(Ventana_add, width = 1000, height = 500,  relief = 'raised', bg="white")
+    canvas1 = Canvas(Ventana_add, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
     canvas1.pack()
 
     label1 = Label(Ventana_add, text='Registration Form')
-    label1.config(font=("bold", 18),bg="white")
+    label1.config(font=("bold", 18),bg="#DFEBE9")
     canvas1.create_window(250, 30, window=label1)
     
     label2 = Label(Ventana_add, text='Fullname :')
-    label2.config(font=('helvetica',14),bg="white")
+    label2.config(font=('helvetica',14),bg="#DFEBE9")
     canvas1.create_window(65, 90, window=label2)
 
     entry1 = Entry(Ventana_add, textvar = Fullname, font = (14), borderwidth=2, width = 30)
     canvas1.create_window(320, 90, window=entry1)
 
     label3 = Label(Ventana_add, text='E-mail :')
-    label3.config(font=('helvetica',14),bg="white")
+    label3.config(font=('helvetica',14),bg="#DFEBE9")
     canvas1.create_window(65, 140, window=label3)
 
     entry2 = Entry (Ventana_add, textvar = Email, font = (14), borderwidth=2, width = 30) 
     canvas1.create_window(320, 140, window=entry2)
 
     label4 = Label(Ventana_add, text='Gender :')
-    label4.config(font=('helvetica',14),bg="white")
+    label4.config(font=('helvetica',14),bg="#DFEBE9")
     canvas1.create_window(65, 190, window=label4)
 
     var = StringVar()
@@ -156,7 +156,7 @@ def add_patient():
     canvas1.create_window(350,190, window = rd2)
 
     label5 = Label(Ventana_add, text='Age :')
-    label5.config(font=('helvetica',14),bg="white")
+    label5.config(font=('helvetica',14),bg="#DFEBE9")
     canvas1.create_window(65, 240, window=label5)
 
     list1 = ['0-21','22-45','46-70','71-']
@@ -166,8 +166,8 @@ def add_patient():
     c.set('Select age')
     canvas1.create_window(320,240, window = droplist)
 
-    label6 = Label(Ventana_add, text='Update file :')
-    label6.config(font=('helvetica',14),bg="white")
+    label6 = Label(Ventana_add, text='Update file EDF:')
+    label6.config(font=('helvetica',14),bg="#DFEBE9")
     canvas1.create_window(65, 300, window=label6)
 
     var = StringVar()
@@ -175,11 +175,30 @@ def add_patient():
     rd3.config(font=('helvetica',14),bg="white")
     canvas1.create_window(200,300, window = rd3)
 
+    label7 = Label(Ventana_add, text='Update file TSE:')
+    label7.config(font=('helvetica',14),bg="#DFEBE9")
+    canvas1.create_window(65, 350, window=label7)
+
+    var = StringVar()
+    rd4 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file_tse())
+    rd4.config(font=('helvetica',14),bg="white")
+    canvas1.create_window(200,350, window = rd4)
+
+
+    # DOIS ARQUIVOS : .edf .tse
     def open_file(): 
-        file = askopenfile(mode ='r', filetypes =[('EGG', '*.py')]) 
+        file = askopenfile(mode ='r', filetypes =[('EGG', '*.edf')]) 
         if file is not None: 
             content = file.read() 
             print(content)
+
+    # DOIS ARQUIVOS : .edf .tse
+    def open_file_tse(): 
+        file = askopenfile(mode ='r', filetypes =[('TSE', '*.tse')]) 
+        if file is not None: 
+            content = file.read() 
+            print(content)
+
 
     def main():
         name = Fullname.get()
@@ -195,11 +214,12 @@ def add_patient():
     # depois pegar os resultados e os dados do paciente e colocar no database
     # enviar mensagem de registro concluido
 
-    button1 = Button(Ventana_add, text='   Submit   ',command=database, bg='black', fg='white', font=('helvetica', 12, 'bold'))
+
+    button1 = Button(Ventana_add, text='   Submit   ',command=database, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     canvas1.create_window(150, 450, window=button1)
 
     # Colocar esta parte na Open Pat.
-    button2 = Button(Ventana_add, text='   Display   ',command=lambda :(text.delete(1.0,END),text.insert(END,display())), bg='black', fg='white', font=('helvetica', 12, 'bold'))
+    button2 = Button(Ventana_add, text='   Display   ',command=lambda :(text.delete(1.0,END),text.insert(END,display())), bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     canvas1.create_window(300, 450, window=button2)
 
     #button3 = Button(Ventana_add, text='   Update   ',command=main, bg='black', fg='white', font=('helvetica', 12, 'bold'))

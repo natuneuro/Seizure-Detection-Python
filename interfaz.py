@@ -235,6 +235,15 @@ def open_patient():
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
 
 
+#--------------------- TELA DE CLASSIFICAÇÃO --------------------------------
+# TODO Juntar com o código do Arthur
+# Criar gráficos
+# Criar animação do processo -> que está processando (barra de progre.)
+
+
+#------------------ TELA Informações da rede ---------------------------------
+# TODO mostrar parte da detecção e outras informações do resultado
+
 # ---------------  Buttons into home screen ----------------------------------
 
 

@@ -5,12 +5,13 @@ from PIL import Image, ImageTk
 import sqlite3
 from tkinter.messagebox import showinfo
 from tkinter.filedialog import askopenfile
+#from ../ProcessamentoSinais/Python/main.py import 
+
 
 # ------------  HOME SCREEN   ---------------------------------------------
 raiz = Tk()
 raiz.title("Epilepsy Detection")
 raiz.resizable(0, 0)
-# raiz.iconbitmap("logos/icono.ico")
 raiz.geometry("1024x768")
 raiz.config(bg="#DFEBE9")
 
@@ -47,7 +48,6 @@ logo_labbio_resized2 = ImageTk.PhotoImage(resized_labbio2)
 
 # -----------------  Open Information Screen ------------------------------
 def info():
-    #raiz.withdraw()
     Ventana_info = Toplevel()
     Ventana_info.geometry("1024x768")
     Ventana_info.config(bg="#DFEBE9")
@@ -65,7 +65,6 @@ def info():
 
 # -----------------  Open Add Patient Screen ------------------------------
 def add_patient():
-    #raiz.withdraw()
     Ventana_add = Toplevel()
     Ventana_add.geometry("1024x768")
     Ventana_add.config(bg="#DFEBE9")
@@ -215,11 +214,11 @@ def add_patient():
     # enviar mensagem de registro concluido
 
 
-    button1 = Button(Ventana_add, text='   Submit   ',command=database, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
+    button1 = Button(Ventana_add, text='   Classificar   ',command=classificacao, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     canvas1.create_window(150, 450, window=button1)
 
     # Colocar esta parte na Open Pat.
-    button2 = Button(Ventana_add, text='   Display   ',command=lambda :(text.delete(1.0,END),text.insert(END,display())), bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
+    button2 = Button(Ventana_add, text='   Update   ',command=lambda :(text.delete(1.0,END),text.insert(END,display())), bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     canvas1.create_window(300, 450, window=button2)
 
     #button3 = Button(Ventana_add, text='   Update   ',command=main, bg='black', fg='white', font=('helvetica', 12, 'bold'))
@@ -260,7 +259,7 @@ def open_patient():
 # Criar gráficos
 # Criar animação do processo -> que está processando (barra de progre.)
 # -----------------  Open Open Patient Screen ------------------------------
-def Classificacao():
+def classificacao():
     #raiz.withdraw()
     Ventana_open = Toplevel()
     Ventana_open.geometry("1024x768")
@@ -268,13 +267,16 @@ def Classificacao():
     Ventana_open.title("Classificacao")
     # Recebe código do arthur e executa
     # Colocar uma animação enquanto estiver rodando de um timer (já está quase pronta)
+    # Quando terminar de executar colocar um botão ver resultados
+    #button7 = Button(Ventana_add, text='   Ver resultado   ',command=resultado, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
+    #canvas3.create_window(150, 450, window=button1)
     Boton_home = Button(Ventana_open, text="Home", command=Ventana_open.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
 
 #------------------ TELA Informações da rede ---------------------------------
 # TODO mostrar parte da detecção e outras informações do resultado
-def Classificacao():
+def resultado():
     #raiz.withdraw()
     Ventana_open = Toplevel()
     Ventana_open.geometry("1024x768")

@@ -196,8 +196,8 @@ def add_patient():
     def open_file_tse(): 
         file = askopenfile(mode ='r', filetypes =[('TSE', '*.tse')]) 
         if file is not None: 
-            content = file.read() 
-            print(content)
+            content2 = file.read() 
+            print(content2)
 
 
     def main():
@@ -259,11 +259,36 @@ def open_patient():
 # TODO Juntar com o código do Arthur
 # Criar gráficos
 # Criar animação do processo -> que está processando (barra de progre.)
-
+# -----------------  Open Open Patient Screen ------------------------------
+def Classificacao():
+    #raiz.withdraw()
+    Ventana_open = Toplevel()
+    Ventana_open.geometry("1024x768")
+    Ventana_open.config(bg="#DFEBE9")
+    Ventana_open.title("Classificacao")
+    # Recebe código do arthur e executa
+    # Colocar uma animação enquanto estiver rodando de um timer (já está quase pronta)
+    Boton_home = Button(Ventana_open, text="Home", command=Ventana_open.destroy,
+                        font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
+                        width="15", height="1", cursor="hand2").place(x=700, y=700)
 
 #------------------ TELA Informações da rede ---------------------------------
 # TODO mostrar parte da detecção e outras informações do resultado
+def Classificacao():
+    #raiz.withdraw()
+    Ventana_open = Toplevel()
+    Ventana_open.geometry("1024x768")
+    Ventana_open.config(bg="#DFEBE9")
+    Ventana_open.title("Resultados")
+    # Recebe código do arthur e executa (código receve content e content2 como entrada)
+    # Colocar uma animação enquanto estiver rodando de um timer (já está quase pronta)
+    Boton_home = Button(Ventana_open, text="Home", command=Ventana_open.destroy,
+                        font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
+                        width="15", height="1", cursor="hand2").place(x=700, y=700)
 
+    #Adicionar botão que vai para a outra ventana de informações
+
+    # Botão para salvar no dataset
 # ---------------  Buttons into home screen ----------------------------------
 
 

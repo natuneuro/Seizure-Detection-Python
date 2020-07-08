@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 import sqlite3
 from tkinter.messagebox import showinfo
 from tkinter.filedialog import askopenfile
-from Modulos import LeituraArquivos, ProcessamentoDoSinal, LeituraEventos, AssociaTrechoEvento, CriaImagen, CNN
+from Modulos import LeituraArquivos,ConfusionMatrix, ProcessamentoDoSinal, LeituraEventos, AssociaTrechoEvento, CriaImagen, CNN
 
 #from ../ProcessamentoSinais/Python/main.py import 
 
@@ -288,7 +288,18 @@ def classificacao(sinal_eeg,eventos):
 
     dados = CriaImagen.cria_imagens_saidas(gama_dividido, delta_theta_dividido, alpha_beta_dividido)
 
-    CNN.CNN_fit(dados[0], dados[1])
+    classification_info = CNN.CNN_fit(dados[0], dados[1])
+
+    # classification_info é um array com a estrutura [accuracy, precision, cm]
+
+    print("\nAccuracy:")
+    print(classification_info[0])
+
+    print("\nPrecision:")
+    print(classification_info[1])
+
+    cm_plot_labels = ["Normal", "Epilepsy"]
+    ConfusionMatrix.plot_confusion_matrix(classification_info[2], cm_plot_labels, title="Confusion Matrix")
 
     # Colocar uma animação enquanto estiver rodando de um timer (já está quase pronta)
     # Quando terminar de executar colocar um botão ver resultados

@@ -44,17 +44,19 @@ def CNN_fit(imagens, saidas):
     FP=cm[1][0]
     FN=cm[0][1]
 
-    accuracy=(TP+TN)/(TP+FP+TN+FN)
-    print("accuracy: ",accuracy)
+    accuracy = (TP + TN) / (TP + FP + TN + FN)
+    # print("accuracy: ", accuracy)
 
-    #recall=TP/(TP+FN)
-    #print("recall: ",recall)
+    # recall=TP/(TP+FN)
+    # print("recall: ",recall)
 
-    precision=TP/(TP+FP)
-    print("precision: ", precision)
+    precision = TP / (TP + FP)
+    # print("precision: ", precision)
 
-    #f_score=2*(precision*recall)/(precision+recall)
-    #print("f-score: ", f_score)
+    # f_score=2*(precision*recall)/(precision+recall)
+    # print("f-score: ", f_score)
 
-    cm_plot_labels = ['Normal', 'Epilepsy']
-    ConfusionMatrix.plot_confusion_matrix(cm, cm_plot_labels, title='Confusion Matrix')
+    # cm_plot_labels = ["Normal", "Epilepsy"]
+    # ConfusionMatrix.plot_confusion_matrix(cm, cm_plot_labels, title="Confusion Matrix")
+
+    return [accuracy, precision, cm]

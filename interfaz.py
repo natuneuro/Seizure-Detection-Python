@@ -232,7 +232,7 @@ def add_patient():
     canvas1.create_window(750, 270, window=text)
 
     lblDisplay = Label(Ventana_add,  text = "Patient Data")
-    lblDisplay.config(font=('Helvetica',18,'bold'),fg='black',justify=CENTER,bg="white")
+    lblDisplay.config(font=('Helvetica',18,'bold'),fg='black',justify=CENTER,bg="#DFEBE9")
     canvas1.create_window(750, 25, window=lblDisplay)
   
 

@@ -73,7 +73,7 @@ def add_patient():
     reg = Frame(Ventana_add)
 
     Fullname = StringVar()
-    Email = StringVar()
+    Informations = StringVar()
 
     conn = sqlite3.connect('Form.db')
     with conn:
@@ -81,12 +81,12 @@ def add_patient():
 
     def database():
         name = Fullname.get()
-        email = Email.get()
+        Informations = Informations.get()
         gender = var.get()
         age = c.get()
         #prog = var1.get()+var2.get()+var3.get()
-        cursor.execute('CREATE TABLE IF NOT EXISTS Patient ( Fullname TEXT,Email TEXT,Gender TEXT,Age TEXT,Programming TEXT)')
-        cursor.execute('INSERT INTO Patient (Fullname,Email,Gender,Age) VALUES(?,?,?,?)',(name,email,gender,age))
+        cursor.execute('CREATE TABLE IF NOT EXISTS Patient ( Fullname TEXT,Informations TEXT,Gender TEXT,Age TEXT,Programming TEXT)')
+        cursor.execute('INSERT INTO Patient (Fullname,Informations,Gender,Age) VALUES(?,?,?,?)',(name,informations,gender,age))
         conn.commit()
         showinfo( title = "Patient Reacord", message = "Data inserted sucessfully")
      
@@ -134,11 +134,11 @@ def add_patient():
     entry1 = Entry(Ventana_add, textvar = Fullname, font = (14), borderwidth=2, width = 30)
     canvas1.create_window(320, 90, window=entry1)
 
-    label3 = Label(Ventana_add, text='E-mail :')
+    label3 = Label(Ventana_add, text='Info:')
     label3.config(font=('helvetica',14),bg="#DFEBE9")
     canvas1.create_window(65, 140, window=label3)
 
-    entry2 = Entry (Ventana_add, textvar = Email, font = (14), borderwidth=2, width = 30) 
+    entry2 = Entry (Ventana_add, textvar = Informations, font = (14), borderwidth=2, width = 30) 
     canvas1.create_window(320, 140, window=entry2)
 
     label4 = Label(Ventana_add, text='Gender :')
@@ -201,11 +201,11 @@ def add_patient():
 
     def main():
         name = Fullname.get()
-        email = Email.get()
+        Informations = Informations.get()
         gender = var.get()
         age = c.get()
         #prog = var1.get()+var2.get()+var3.get()    
-        update(name,email,gender,age)
+        update(name,Informations,gender,age)
 
 
     # Clasificação 

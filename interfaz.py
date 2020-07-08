@@ -5,6 +5,8 @@ from PIL import Image, ImageTk
 import sqlite3
 from tkinter.messagebox import showinfo
 from tkinter.filedialog import askopenfile
+from Modulos import LeituraArquivos, ProcessamentoDoSinal, LeituraEventos, AssociaTrechoEvento, CriaImagen, CNN
+
 #from ../ProcessamentoSinais/Python/main.py import 
 
 
@@ -185,18 +187,14 @@ def add_patient():
 
 
     # DOIS ARQUIVOS : .edf .tse
-    def open_file(): 
-        file = askopenfile(mode ='r', filetypes =[('EGG', '*.edf')]) 
-        if file is not None: 
-            content = file.read() 
-            print(content)
+    def open_file():
+        sinal_eeg = LeituraArquivos.ImportarSinalEEG()
+        return sinal_eeg
 
     # DOIS ARQUIVOS : .edf .tse
-    def open_file_tse(): 
-        file = askopenfile(mode ='r', filetypes =[('TSE', '*.tse')]) 
-        if file is not None: 
-            content2 = file.read() 
-            print(content2)
+    def open_file_tse():
+        eventos = LeituraEventos.importar_evento() 
+        return eventos
 
 
     def main():
@@ -213,7 +211,6 @@ def add_patient():
     # depois pegar os resultados e os dados do paciente e colocar no database
     # enviar mensagem de registro concluido
 
-
     button1 = Button(Ventana_add, text='   Classificar   ',command=classificacao, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     canvas1.create_window(150, 450, window=button1)
 
@@ -221,11 +218,6 @@ def add_patient():
     button2 = Button(Ventana_add, text='   Update   ',command=lambda :(text.delete(1.0,END),text.insert(END,display())), bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     canvas1.create_window(300, 450, window=button2)
 
-    #button3 = Button(Ventana_add, text='   Update   ',command=main, bg='black', fg='white', font=('helvetica', 12, 'bold'))
-    #canvas1.create_window(150, 550, window=button3)
-
-    #button4 = Button(Ventana_add, text='   Delete   ',command=delete_task, bg='black', fg='white', font=('helvetica', 12, 'bold'))
-    #canvas1.create_window(300, 550, window=button4)
 
     text = Text(Ventana_add,  height=25, width=50)
     text.config(font=('helvetica',12),bg="white")
@@ -256,6 +248,28 @@ def open_patient():
 
 #--------------------- TELA DE CLASSIFICAÇÃO --------------------------------
 # TODO Juntar com o código do Arthur
+# def main_processamento(sinal_eeg, eventos):
+
+#     fs = sinal_eeg.frequencia_de_amostragem
+
+#     sinal_delta_theta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([1, 7])
+#     sinal_alpha_beta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([8, 30])
+#     sinal_gama = sinal_eeg.decomporSinalEmFaixaDeFrequencia([31, 100])
+
+#     delta_theta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_delta_theta, fs)
+#     alpha_beta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_alpha_beta, fs)
+#     gama_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_gama, fs)
+
+#     AssociaTrechoEvento.associa_trecho_evento(delta_theta_dividido, eventos)
+#     AssociaTrechoEvento.associa_trecho_evento(alpha_beta_dividido, eventos)
+#     AssociaTrechoEvento.associa_trecho_evento(gama_dividido, eventos)
+
+#     dados = CriaImagen.cria_imagens_saidas(gama_dividido, delta_theta_dividido, alpha_beta_dividido)
+
+#     CNN.CNN_fit(dados[0], dados[1])
+
+    
+#     fs = sinal_eeg.frequencia_de_amostragem
 # Criar gráficos
 # Criar animação do processo -> que está processando (barra de progre.)
 # -----------------  Open Open Patient Screen ------------------------------
@@ -291,6 +305,10 @@ def resultado():
     #Adicionar botão que vai para a outra ventana de informações
 
     # Botão para salvar no dataset
+
+
+
+
 # ---------------  Buttons into home screen ----------------------------------
 
 

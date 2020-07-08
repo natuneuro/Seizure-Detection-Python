@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter.filedialog import askopenfile
+from tkinter.filedialog import askopenfile, askopenfilename
 from PIL import Image, ImageTk
 import sqlite3
 from tkinter.messagebox import showinfo
@@ -8,6 +8,11 @@ from tkinter.filedialog import askopenfile
 from Modulos import LeituraArquivos, ProcessamentoDoSinal, LeituraEventos, AssociaTrechoEvento, CriaImagen, CNN
 
 #from ../ProcessamentoSinais/Python/main.py import 
+
+
+# FILES
+sinal_eeg = []
+eventos = []
 
 
 # ------------  HOME SCREEN   ---------------------------------------------
@@ -71,7 +76,7 @@ def add_patient():
     Ventana_add.geometry("1024x768")
     Ventana_add.config(bg="#DFEBE9")
     Ventana_add.title("Patient Registration Form")
-
+    
     reg = Frame(Ventana_add)
 
     Fullname = StringVar()
@@ -172,7 +177,7 @@ def add_patient():
     canvas1.create_window(65, 300, window=label6)
 
     var = StringVar()
-    rd3 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file())
+    rd3 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file(sinal_eeg))
     rd3.config(font=('helvetica',14),bg="white")
     canvas1.create_window(200,300, window = rd3)
 
@@ -181,20 +186,24 @@ def add_patient():
     canvas1.create_window(65, 350, window=label7)
 
     var = StringVar()
-    rd4 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file_tse())
+    rd4 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file_tse(eventos))
+    if sinal_eeg !=  None:
+        print("Existe")
     rd4.config(font=('helvetica',14),bg="white")
     canvas1.create_window(200,350, window = rd4)
 
 
     # DOIS ARQUIVOS : .edf .tse
-    def open_file():
-        sinal_eeg = LeituraArquivos.ImportarSinalEEG()
-        return sinal_eeg
+    def open_file(sinal_eeg):
+        aux = LeituraArquivos.ImportarSinalEEG()
+        sinal_eeg.append(aux)
+        #return sinal_eeg
 
     # DOIS ARQUIVOS : .edf .tse
-    def open_file_tse():
-        eventos = LeituraEventos.importar_evento() 
-        return eventos
+    def open_file_tse(eventos):
+        aux = LeituraEventos.importar_evento()
+        eventos.append(aux)
+        #return eventos
 
 
     def main():
@@ -211,7 +220,7 @@ def add_patient():
     # depois pegar os resultados e os dados do paciente e colocar no database
     # enviar mensagem de registro concluido
 
-    button1 = Button(Ventana_add, text='   Classificar   ',command=classificacao, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
+    button1 = Button(Ventana_add, text='   Classificar   ',command=lambda :classificacao(sinal_eeg,eventos), bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     canvas1.create_window(150, 450, window=button1)
 
     # Colocar esta parte na Open Pat.
@@ -227,8 +236,6 @@ def add_patient():
     lblDisplay.config(font=('Helvetica',18,'bold'),fg='black',justify=CENTER,bg="#DFEBE9")
     canvas1.create_window(750, 25, window=lblDisplay)
   
-
-
     Boton_home = Button(Ventana_add, text="Home", command=Ventana_add.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
@@ -250,36 +257,39 @@ def open_patient():
 # TODO Juntar com o código do Arthur
 # def main_processamento(sinal_eeg, eventos):
 
-#     fs = sinal_eeg.frequencia_de_amostragem
-
-#     sinal_delta_theta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([1, 7])
-#     sinal_alpha_beta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([8, 30])
-#     sinal_gama = sinal_eeg.decomporSinalEmFaixaDeFrequencia([31, 100])
-
-#     delta_theta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_delta_theta, fs)
-#     alpha_beta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_alpha_beta, fs)
-#     gama_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_gama, fs)
-
-#     AssociaTrechoEvento.associa_trecho_evento(delta_theta_dividido, eventos)
-#     AssociaTrechoEvento.associa_trecho_evento(alpha_beta_dividido, eventos)
-#     AssociaTrechoEvento.associa_trecho_evento(gama_dividido, eventos)
-
-#     dados = CriaImagen.cria_imagens_saidas(gama_dividido, delta_theta_dividido, alpha_beta_dividido)
-
-#     CNN.CNN_fit(dados[0], dados[1])
-
-    
-#     fs = sinal_eeg.frequencia_de_amostragem
 # Criar gráficos
 # Criar animação do processo -> que está processando (barra de progre.)
 # -----------------  Open Open Patient Screen ------------------------------
-def classificacao():
+def classificacao(sinal_eeg,eventos):
     #raiz.withdraw()
+    print("Aqui estou")
     Ventana_open = Toplevel()
     Ventana_open.geometry("1024x768")
     Ventana_open.config(bg="#DFEBE9")
     Ventana_open.title("Classificacao")
     # Recebe código do arthur e executa
+    sinal_eeg = sinal_eeg[0]
+    eventos = eventos[0]
+    print(sinal_eeg)
+
+    fs = sinal_eeg.frequencia_de_amostragem
+
+    sinal_delta_theta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([1, 7])
+    sinal_alpha_beta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([8, 30])
+    sinal_gama = sinal_eeg.decomporSinalEmFaixaDeFrequencia([31, 100])
+
+    delta_theta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_delta_theta, fs)
+    alpha_beta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_alpha_beta, fs)
+    gama_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_gama, fs)
+
+    AssociaTrechoEvento.associa_trecho_evento(delta_theta_dividido, eventos)
+    AssociaTrechoEvento.associa_trecho_evento(alpha_beta_dividido, eventos)
+    AssociaTrechoEvento.associa_trecho_evento(gama_dividido, eventos)
+
+    dados = CriaImagen.cria_imagens_saidas(gama_dividido, delta_theta_dividido, alpha_beta_dividido)
+
+    CNN.CNN_fit(dados[0], dados[1])
+
     # Colocar uma animação enquanto estiver rodando de um timer (já está quase pronta)
     # Quando terminar de executar colocar um botão ver resultados
     #button7 = Button(Ventana_add, text='   Ver resultado   ',command=resultado, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))

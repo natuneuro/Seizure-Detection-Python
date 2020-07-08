@@ -1,0 +1,15 @@
+CLINICAL HISTORY: This is a 12-year-old female with hydrocephalus, right posterior shunt, and epilepsy.
+MEDICATIONS: Tegretol.
+INTRODUCTION: Digital video EEG is performed in the lab using standard 10-20 system of electrode placement with one channel of EKG. Hyperventilation and photic stimulation were performed.  This is an awake and asleep record.
+DESCRIPTION OF THE RECORD: In wakefulness, the background EEG lacks the appropriate organization for a child of this age, although there is a 7 to 8 Hz, 40 uV posterior dominant rhythm.  There is excess background beta and theta, and there is a bit of posterior slowing.
+The major abnormality in this record is multiple brief bursts of generalized spike and slow wave activity seen throughout the record.  This activity is extremely high amplitude in nature, frontally predominant, and is approximately 3 to 10 Hz in duration.  The technologist reports that she tested the patient, although it is not possible to hear that testing reviewing the video EEG. The spike and wave activity occurs during photic stimulation, but it is not clear that it was accentuated by photic stimulation.  Hyperventilation did not activate the spike and wave activity, although it may accentuate some of the posterior slowing.  Features of drowsiness include attenuation of the alpha rhythm and generalized background slowing.
+HR:  72 BPM.
+IMPRESSION: Abnormal EEG due to:
+Bursts of generalized 3 to 4 Hz spike and wave activity.
+Generalized background slowing.
+Occipitally predominant slowing.
+CLINICAL CORRELATION: In comparison to previous studies, the focal slowing is more right posterior than centrotemporal or centroparietal.  The overall background showed evidence of maturation.  The bursts of spike and wave activity are longer in duration compared to previous studies, but it was not possible to identify clinical impairment of awareness.
+
+
+
+

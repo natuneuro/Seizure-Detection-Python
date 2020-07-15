@@ -172,37 +172,39 @@ def add_patient():
     c.set('Select age')
     canvas1.create_window(320,240, window = droplist)
 
-    label6 = Label(Ventana_add, text='Update file EDF:')
+    label6 = Label(Ventana_add, text='Update files:')
     label6.config(font=('helvetica',14),bg="#DFEBE9")
     canvas1.create_window(65, 300, window=label6)
 
     var = StringVar()
-    rd3 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file(sinal_eeg))
+    rd3 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file(sinal_eeg, eventos))
     rd3.config(font=('helvetica',14),bg="white")
     canvas1.create_window(200,300, window = rd3)
 
-    label7 = Label(Ventana_add, text='Update file TSE:')
-    label7.config(font=('helvetica',14),bg="#DFEBE9")
-    canvas1.create_window(65, 350, window=label7)
+    #label7 = Label(Ventana_add, text='Update file TSE:')
+    #label7.config(font=('helvetica',14),bg="#DFEBE9")
+    #canvas1.create_window(65, 350, window=label7)
 
-    var = StringVar()
-    rd4 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file_tse(eventos))
-    if sinal_eeg !=  None:
-        print("Existe")
-    rd4.config(font=('helvetica',14),bg="white")
-    canvas1.create_window(200,350, window = rd4)
+    #var = StringVar()
+    #rd4 = Button(Ventana_add ,text="File" ,padx = 5, command = lambda:open_file_tse(eventos))
+    #if sinal_eeg !=  None:
+    #    print("Existe")
+    #rd4.config(font=('helvetica',14),bg="white")
+    #canvas1.create_window(200,350, window = rd4)
 
 
     # DOIS ARQUIVOS : .edf .tse
-    def open_file(sinal_eeg):
+    def open_file(sinal_eeg, eventos):
         aux = LeituraArquivos.ImportarSinalEEG()
         sinal_eeg.append(aux)
+        aux2 = LeituraEventos.importar_evento()
+        eventos.append(aux2)
         #return sinal_eeg
 
     # DOIS ARQUIVOS : .edf .tse
-    def open_file_tse(eventos):
-        aux = LeituraEventos.importar_evento()
-        eventos.append(aux)
+    #def open_file_tse(eventos):
+    #    aux = LeituraEventos.importar_evento()
+    #    eventos.append(aux)
         #return eventos
 
 
@@ -263,10 +265,19 @@ def open_patient():
 def classificacao(sinal_eeg,eventos):
     #raiz.withdraw()
     print("Aqui estou")
-    Ventana_open = Toplevel()
-    Ventana_open.geometry("1024x768")
-    Ventana_open.config(bg="#DFEBE9")
-    Ventana_open.title("Classificacao")
+    Ventana_class = Toplevel()
+    Ventana_class.geometry("1024x768")
+    Ventana_class.config(bg="#DFEBE9")
+    Ventana_class.title("Classificacao")
+    canvas3 = Canvas(Ventana_class, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
+    canvas3.pack()
+
+    label1 = Label(Ventana_class, text='Classification Informations')
+    label1.config(font=("bold", 18),bg="#DFEBE9")
+    canvas3.create_window(250, 30, window=label1)
+
+
+
     # Recebe código do arthur e executa
     sinal_eeg = sinal_eeg[0]
     eventos = eventos[0]
@@ -289,17 +300,29 @@ def classificacao(sinal_eeg,eventos):
     dados = CriaImagen.cria_imagens_saidas(gama_dividido, delta_theta_dividido, alpha_beta_dividido)
 
     classification_info = CNN.CNN_fit(dados[0], dados[1])
+    cm_plot_labels = ["Normal", "Epilepsy"]
+    ConfusionMatrix.plot_confusion_matrix(classification_info[2], cm_plot_labels, title="Confusion Matrix")
 
     # classification_info é um array com a estrutura [accuracy, precision, cm]
+    label2 = Label(Ventana_class, text='Info:')
+    label2.config(font=('helvetica',14),bg="#DFEBE9")
+    canvas3.create_window(65, 140, window=label2)
+    resultado_image = PhotoImage(file="../Resultado.png")
+    Label(Ventana_class, image=resultado_image, bg="#DFEBE9").place(x=300, y=55)
 
+    label2 = Label(Ventana_class, text='Accurancy:')
+    label2.config(font=('helvetica',14),bg="#DFEBE9")
+    canvas3.create_window(65, 140, window=label2)
     print("\nAccuracy:")
     print(classification_info[0])
 
     print("\nPrecision:")
     print(classification_info[1])
 
-    cm_plot_labels = ["Normal", "Epilepsy"]
-    ConfusionMatrix.plot_confusion_matrix(classification_info[2], cm_plot_labels, title="Confusion Matrix")
+    #cm_plot_labels = ["Normal", "Epilepsy"]
+    #ConfusionMatrix.plot_confusion_matrix(classification_info[2], cm_plot_labels, title="Confusion Matrix")
+
+    
 
     # Colocar uma animação enquanto estiver rodando de um timer (já está quase pronta)
     # Quando terminar de executar colocar um botão ver resultados

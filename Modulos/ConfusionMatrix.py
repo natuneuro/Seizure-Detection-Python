@@ -3,10 +3,11 @@ import itertools
 import numpy as np
 
 
-def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion Matix', cmap=plt.cm.Blues):
+def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion Matix', cmap=plt.cm.Blues, bg='#DFEBE9'):
 
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
+    #plt.set_facecolor('#DFEBE9')
     plt.colorbar()
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes, rotation=45)

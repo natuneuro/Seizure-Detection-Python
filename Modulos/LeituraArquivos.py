@@ -22,7 +22,7 @@ def ImportarSinalEEG():
 
     nome_arquivo_tse = nome_arquivo_edf.replace(".edf", ".tse")
 
-    return sinal_eeg
+    return sinal_eeg , nome_arquivo_edf
 
 
 def ImportarArquivoTSE():

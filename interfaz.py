@@ -9,6 +9,22 @@ from Modulos import LeituraArquivos,ConfusionMatrix, ProcessamentoDoSinal, Leitu
 
 #from ../ProcessamentoSinais/Python/main.py import 
 
+# TODO
+# Colocar o DB visual : mostrar os valores que já estão salvos nele 
+# Fechar tela de registro
+# Destroir tela e <avisar pra Naty hj a noite se deu okay>
+# Parte de carregamento : colocar os prints em uma tela <gerar ideia de animação
+# Alterar BG do fundo do gráfico
+# Aumentar o tamanho da imagem
+
+# DONE
+# Mudar nome do classificação para inglês - Done
+# Fullname : IDPati. - Done
+# Olhar q idade é criança/ jovem/ adulto/ idoso  - Done
+
+# Fazendo
+# ID = nome do arquivo, pegar o nome do arquivo para dar o ID do pac.
+
 
 # FILES
 sinal_eeg = []
@@ -79,7 +95,7 @@ def add_patient():
     
     reg = Frame(Ventana_add)
 
-    Fullname = StringVar()
+    IDPat = StringVar()
     Informations = StringVar()
 
     conn = sqlite3.connect('Form.db')
@@ -87,13 +103,13 @@ def add_patient():
         cursor = conn.cursor()
 
     def database():
-        name = Fullname.get()
+        name = IDPat.get()
         Informations = Informations.get()
         gender = var.get()
         age = c.get()
         #prog = var1.get()+var2.get()+var3.get()
-        cursor.execute('CREATE TABLE IF NOT EXISTS Patient ( Fullname TEXT,Informations TEXT,Gender TEXT,Age TEXT,Programming TEXT)')
-        cursor.execute('INSERT INTO Patient (Fullname,Informations,Gender,Age) VALUES(?,?,?,?)',(name,informations,gender,age))
+        cursor.execute('CREATE TABLE IF NOT EXISTS Patient ( IDPat TEXT,Informations TEXT,Gender TEXT,Age TEXT,Programming TEXT)')
+        cursor.execute('INSERT INTO Patient (IDPat,Informations,Gender,Age) VALUES(?,?,?,?)',(name,informations,gender,age))
         conn.commit()
         showinfo( title = "Patient Reacord", message = "Data inserted sucessfully")
      
@@ -108,14 +124,14 @@ def add_patient():
         return output
 
     def delete(conn,task):
-        sql ='DELETE FROM Patient WHERE Fullname =?'
+        sql ='DELETE FROM Patient WHERE IDPat =?'
         cursor = conn.cursor()
         cursor.execute(sql,task)
         conn.commit()
         showinfo( title = "Patient Reacord", message = "Data deleted sucessfully")
         
     def update(task):
-        sql = 'UPDATE Patient SET Email=?, Gender=?, Age=? WHERE Fullname = ?'
+        sql = 'UPDATE Patient SET Email=?, Gender=?, Age=? WHERE IDPat = ?'
         cursor.execute(sql,task)
         conn.commit()
         showinfo( title = "Patient Reacord", message = "Data updated sucessfully")
@@ -123,7 +139,7 @@ def add_patient():
     def delete_task():
         database = r"Form.db"
         conn = sqlite3.connect(database)
-        name = Fullname.get()
+        name = IDPat.get()
         with conn:
             delete_task(conn, name)
 
@@ -134,12 +150,12 @@ def add_patient():
     label1.config(font=("bold", 18),bg="#DFEBE9")
     canvas1.create_window(250, 30, window=label1)
     
-    label2 = Label(Ventana_add, text='Fullname :')
-    label2.config(font=('helvetica',14),bg="#DFEBE9")
-    canvas1.create_window(65, 90, window=label2)
+    #label2 = Label(Ventana_add, text='IDPat :')
+    #label2.config(font=('helvetica',14),bg="#DFEBE9")
+    #canvas1.create_window(65, 90, window=label2)
 
-    entry1 = Entry(Ventana_add, textvar = Fullname, font = (14), borderwidth=2, width = 30)
-    canvas1.create_window(320, 90, window=entry1)
+    #entry1 = Entry(Ventana_add, textvar = IDPat, font = (14), borderwidth=2, width = 30)
+    #canvas1.create_window(320, 90, window=entry1)
 
     label3 = Label(Ventana_add, text='Info:')
     label3.config(font=('helvetica',14),bg="#DFEBE9")
@@ -165,7 +181,7 @@ def add_patient():
     label5.config(font=('helvetica',14),bg="#DFEBE9")
     canvas1.create_window(65, 240, window=label5)
 
-    list1 = ['0-21','22-45','46-70','71-']
+    list1 = ['Child: 0-18','Adult: 19-59','Elderly: 60-',]
     c=StringVar()
     droplist = OptionMenu(Ventana_add,c,*list1)
     droplist.config(font=('helvetica',14),bg="white",width = 27)
@@ -195,7 +211,8 @@ def add_patient():
 
     # DOIS ARQUIVOS : .edf .tse
     def open_file(sinal_eeg, eventos):
-        aux = LeituraArquivos.ImportarSinalEEG()
+        aux,nomeArquivo = LeituraArquivos.ImportarSinalEEG()
+        print("####################################"+ nomeArquivo)
         sinal_eeg.append(aux)
         aux2 = LeituraEventos.importar_evento()
         eventos.append(aux2)
@@ -209,20 +226,23 @@ def add_patient():
 
 
     def main():
-        name = Fullname.get()
+        name = IDPat.get()
         Informations = Informations.get()
         gender = var.get()
         age = c.get()
         #prog = var1.get()+var2.get()+var3.get()    
         update(name,Informations,gender,age)
 
+    def classification(Ventana_add,sinal_eeg,eventos):
+        Ventana_add.destroy()
+        classificacao(sinal_eeg,eventos)
 
     # Clasificação 
     # daqui vai para a outra tela, com os resultados
     # depois pegar os resultados e os dados do paciente e colocar no database
     # enviar mensagem de registro concluido
 
-    button1 = Button(Ventana_add, text='   Classificar   ',command=lambda :classificacao(sinal_eeg,eventos), bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
+    button1 = Button(Ventana_add, text='   Classify   ',command=lambda :classification(Ventana_add,sinal_eeg,eventos), bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     canvas1.create_window(150, 450, window=button1)
 
     # Colocar esta parte na Open Pat.
@@ -264,11 +284,10 @@ def open_patient():
 # -----------------  Open Open Patient Screen ------------------------------
 def classificacao(sinal_eeg,eventos):
     #raiz.withdraw()
-    print("Aqui estou")
     Ventana_class = Toplevel()
     Ventana_class.geometry("1024x768")
     Ventana_class.config(bg="#DFEBE9")
-    Ventana_class.title("Classificacao")
+    Ventana_class.title("Classification")#MUDAR ESSE NOME AQUI
     canvas3 = Canvas(Ventana_class, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
     canvas3.pack()
 
@@ -281,7 +300,6 @@ def classificacao(sinal_eeg,eventos):
     # Recebe código do arthur e executa
     sinal_eeg = sinal_eeg[0]
     eventos = eventos[0]
-    print(sinal_eeg)
 
     fs = sinal_eeg.frequencia_de_amostragem
 
@@ -313,11 +331,20 @@ def classificacao(sinal_eeg,eventos):
     label2 = Label(Ventana_class, text='Accurancy:')
     label2.config(font=('helvetica',14),bg="#DFEBE9")
     canvas3.create_window(65, 140, window=label2)
+    label4 = Label(Ventana_class, text=classification_info[0])
+    label4.config(font=('helvetica',14),bg="#DFEBE9")
+    canvas3.create_window(65, 160, window=label4)
     print("\nAccuracy:")
     print(classification_info[0])
 
-    print("\nPrecision:")
-    print(classification_info[1])
+    #label2 = Label(Ventana_class, text='Precision:')
+    #label2.config(font=('helvetica',14),bg="#DFEBE9")
+    #canvas3.create_window(65, 140, window=label2)
+    #label4 = Label(Ventana_class, text=classification_info[1])
+    #label4.config(font=('helvetica',14),bg="#DFEBE9")
+    #canvas3.create_window(65, 160, window=label4)
+    #print("\nPrecision:")
+    #print(classification_info[1])
 
     #cm_plot_labels = ["Normal", "Epilepsy"]
     #ConfusionMatrix.plot_confusion_matrix(classification_info[2], cm_plot_labels, title="Confusion Matrix")
@@ -328,7 +355,7 @@ def classificacao(sinal_eeg,eventos):
     # Quando terminar de executar colocar um botão ver resultados
     #button7 = Button(Ventana_add, text='   Ver resultado   ',command=resultado, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     #canvas3.create_window(150, 450, window=button1)
-    Boton_home = Button(Ventana_open, text="Home", command=Ventana_open.destroy,
+    Boton_home = Button(Ventana_class, text="Home", command=Ventana_class.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
 

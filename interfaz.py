@@ -355,7 +355,7 @@ def classificacao(sinal_eeg,eventos):
     # Quando terminar de executar colocar um botão ver resultados
     #button7 = Button(Ventana_add, text='   Ver resultado   ',command=resultado, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     #canvas3.create_window(150, 450, window=button1)
-    Boton_home = Button(Ventana_class, text="Home", command=Ventana_class.destroy,
+    Boton_home = Button(Ventana_open, text="Home", command=Ventana_open.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
 

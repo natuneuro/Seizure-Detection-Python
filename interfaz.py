@@ -10,14 +10,27 @@ from Modulos import LeituraArquivos,ConfusionMatrix, ProcessamentoDoSinal, Leitu
 #from ../ProcessamentoSinais/Python/main.py import 
 
 # TODO
+# So salvar os dados numericos
+# Botao para gerar os graficos usando os dados numericos
+# Pegar parte do codigo que gera os graficos e modularizar 
+# Add novos graficos nas novas paginas (ou criar uma pagina com varios botoes que altere os graficos mostrados)
+# Clicar na imagem abrir uma nova pagina onde poderia visualizar melhor
+# Colocar uma ilustra. com os focos
+
+
+
+
+# DONE
+
+
 # Colocar o DB visual : mostrar os valores que já estão salvos nele 
-# Fechar tela de registro
-# Destroir tela e <avisar pra Naty hj a noite se deu okay>
 # Parte de carregamento : colocar os prints em uma tela <gerar ideia de animação
 # Alterar BG do fundo do gráfico
 # Aumentar o tamanho da imagem
 
-# DONE
+
+# Destroir tela e <avisar pra Naty hj a noite se deu okay>
+# Fechar tela de registro
 # Mudar nome do classificação para inglês - Done
 # Fullname : IDPati. - Done
 # Olhar q idade é criança/ jovem/ adulto/ idoso  - Done
@@ -29,44 +42,6 @@ from Modulos import LeituraArquivos,ConfusionMatrix, ProcessamentoDoSinal, Leitu
 # FILES
 sinal_eeg = []
 eventos = []
-
-
-# ------------  HOME SCREEN   ---------------------------------------------
-raiz = Tk()
-raiz.title("Epilepsy Detection")
-raiz.resizable(0, 0)
-raiz.geometry("1024x768")
-raiz.config(bg="#DFEBE9")
-
-# ------------------ IMAGES AND LOGOS INTO HOME SCREEN -------------------
-
-
-logo_cerebro = PhotoImage(file="logos/cerebrito.png")
-Label(raiz, image=logo_cerebro, bg="#DFEBE9").place(x=64, y=55)
-
-logo_ufmg= Image.open("logos/ufmg _logo.png")
-resized_ufmg= logo_ufmg.resize((100,42), Image.ANTIALIAS)
-logo_ufmg_resized=ImageTk.PhotoImage(resized_ufmg)
-Label(raiz, image=logo_ufmg_resized,bg="#DFEBE9").place(x=670,y=691)
-
-logo_labbio = Image.open("logos/labbio_logo.png")
-resized_labbio = logo_labbio.resize((100, 52), Image.ANTIALIAS)
-logo_labbio_resized = ImageTk.PhotoImage(resized_labbio)
-Label(raiz, image=logo_labbio_resized, bg="#DFEBE9").place(x=840, y=686)
-
-# ------------------ Images and logos into Information Screen ------------
-
-logo_cerebro_solo = Image.open("logos/cerebro_solo.png")
-resized_cerebro = logo_cerebro_solo.resize((400, 400), Image.ANTIALIAS)
-logo_cerebro_resized = ImageTk.PhotoImage(resized_cerebro)
-
-resized_ufmg2= logo_ufmg.resize((150,63), Image.ANTIALIAS)
-logo_ufmg_resized2=ImageTk.PhotoImage(resized_ufmg2)
-
-
-resized_labbio2 = logo_labbio.resize((150, 78), Image.ANTIALIAS)
-logo_labbio_resized2 = ImageTk.PhotoImage(resized_labbio2)
-
 
 
 # -----------------  Open Information Screen ------------------------------
@@ -87,7 +62,7 @@ def info():
 
 
 # -----------------  Open Add Patient Screen ------------------------------
-def add_patient():
+def add_patient(raiz):
     Ventana_add = Toplevel()
     Ventana_add.geometry("1024x768")
     Ventana_add.config(bg="#DFEBE9")
@@ -237,6 +212,12 @@ def add_patient():
         Ventana_add.destroy()
         classificacao(sinal_eeg,eventos)
 
+    def HomeOpen(Ventana_add, raiz):
+        Ventana_add.destroy()
+        raiz.deiconify()
+
+
+
     # Clasificação 
     # daqui vai para a outra tela, com os resultados
     # depois pegar os resultados e os dados do paciente e colocar no database
@@ -258,7 +239,7 @@ def add_patient():
     lblDisplay.config(font=('Helvetica',18,'bold'),fg='black',justify=CENTER,bg="#DFEBE9")
     canvas1.create_window(750, 25, window=lblDisplay)
   
-    Boton_home = Button(Ventana_add, text="Home", command=Ventana_add.destroy,
+    Boton_home = Button(Ventana_add, text="Home", command=raiz.deiconify(),
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
 
@@ -355,6 +336,10 @@ def classificacao(sinal_eeg,eventos):
     # Quando terminar de executar colocar um botão ver resultados
     #button7 = Button(Ventana_add, text='   Ver resultado   ',command=resultado, bg="#14787A", fg="#ffffff", font=('helvetica', 12, 'bold'))
     #canvas3.create_window(150, 450, window=button1)
+    Boton_home = Button(Ventana_class, text="Home", command=Ventana_class.destroy,
+                        font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
+                        width="15", height="1", cursor="hand2").place(x=700, y=700)
+
     Boton_home = Button(Ventana_open, text="Home", command=Ventana_open.destroy,
                         font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                         width="15", height="1", cursor="hand2").place(x=700, y=700)
@@ -380,25 +365,67 @@ def resultado():
 
 
 
-# ---------------  Buttons into home screen ----------------------------------
+# ------------  HOME SCREEN   ---------------------------------------------
+
+raiz = Tk()
+raiz.title("Epilepsy Detection")
+raiz.resizable(0, 0)
+raiz.geometry("1024x768")
+raiz.config(bg="#DFEBE9")
+
+# ------------------ IMAGES AND LOGOS INTO HOME SCREEN -------------------
+
+
+logo_cerebro = PhotoImage(file="logos/cerebrito.png")
+Label(raiz, image=logo_cerebro, bg="#DFEBE9").place(x=64, y=55)
+
+logo_ufmg= Image.open("logos/ufmg _logo.png")
+resized_ufmg= logo_ufmg.resize((100,42), Image.ANTIALIAS)
+logo_ufmg_resized=ImageTk.PhotoImage(resized_ufmg)
+Label(raiz, image=logo_ufmg_resized,bg="#DFEBE9").place(x=670,y=691)
+
+logo_labbio = Image.open("logos/labbio_logo.png")
+resized_labbio = logo_labbio.resize((100, 52), Image.ANTIALIAS)
+logo_labbio_resized = ImageTk.PhotoImage(resized_labbio)
+Label(raiz, image=logo_labbio_resized, bg="#DFEBE9").place(x=840, y=686)
+
+# ------------------ Images and logos into Information Screen ------------
+
+logo_cerebro_solo = Image.open("logos/cerebro_solo.png")
+resized_cerebro = logo_cerebro_solo.resize((400, 400), Image.ANTIALIAS)
+logo_cerebro_resized = ImageTk.PhotoImage(resized_cerebro)
+
+resized_ufmg2= logo_ufmg.resize((150,63), Image.ANTIALIAS)
+logo_ufmg_resized2=ImageTk.PhotoImage(resized_ufmg2)
+
+
+resized_labbio2 = logo_labbio.resize((150, 78), Image.ANTIALIAS)
+logo_labbio_resized2 = ImageTk.PhotoImage(resized_labbio2)
+
+def addPat(raiz):
+    raiz.iconify()
+    add_patient(raiz)
+
+def openPat(raiz):
+    raiz.destroy()
+    open_patient()
 
 
 Boton_info = Button(raiz, text="Abaut", command=info,
                     font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                     width="15", height="1", cursor="hand2").place(x=700, y=101)
 
-Boton_add = Button(raiz, text="Add Pacient", command=add_patient,
+Boton_add = Button(raiz, text="Add Patient", command=lambda :addPat(raiz),
                    font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                    width="15", height="1", cursor="hand2").place(x=700, y=230)
 
-Boton_open = Button(raiz, text="Open Patient", command=open_patient,
+Boton_open = Button(raiz, text="Open Patient", command=lambda :openPat(raiz),
                     font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                     width="15", height="1", cursor="hand2").place(x=700, y=359)
 
 Boton_close = Button(raiz, text="Close", command=raiz.quit,
                      font=("AvantGarde", 20, "bold"), bg="#14787A", fg="#ffffff",
                      width="15", height="1", cursor="hand2").place(x=700, y=488)
-
 
 
 

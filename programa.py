@@ -34,9 +34,9 @@ class Relatorios():
     def gerarRelatorioCliente(self):
         self.c = canvas.Canvas("cliente.pdf")
         self.codigoRel = self.codigo_entry.get()
-        self.ageRel = self.age_entry.get()
+        #self.ageRel = self.age_entry.get()
         self.infoRel = self.info_entry.get()
-        self.generoRel = self.genero_entry.get()
+        #self.generoRel = self.gender_entry.get()
         
 
         self.c.setFont("Helvetica-Bold", 24)
@@ -50,7 +50,7 @@ class Relatorios():
 
         self.c.setFont("Helvetica", 18)
         self.c.drawString(150,700, self.codigoRel)
-        self.c.drawString(150,670, self.ageRel)
+        #self.c.drawString(150,670, self.ageRel)
         self.c.drawString(150,630, self.generoRel)
         self.c.drawString(200,600, self.infoRel)
 
@@ -85,7 +85,7 @@ class Funcs():
                 cod INTEGER PRIMARY KEY,
                 nomeArquivo CHAR(200) NOT NULL,
                 info CHAR(200),
-                age INTEGER(3),
+                age CHAR(50),
                 genero CHAR(40)
             );
         
@@ -152,7 +152,7 @@ class Funcs():
     def alterar_cliente(self):
         self.variaveis()
         self.conecta_bd()
-        self.cursor.execute("""  UPDATE clientes SET age = ?, info = ?, genero = ? cod = ?
+        self.cursor.execute("""  UPDATE clientes SET age = ?, info = ?, genero = ?, cod = ?
             WHERE  nomeArquivo = ?  """, (self.age, self.info, self.genero, self.codigo, self.nomeArquivo))
         self.conn.commit()
         self.desconecta_bd()
@@ -357,10 +357,8 @@ class Application(Funcs, Relatorios):
 
         menubar.add_cascade(label = "Opções", menu = filemenu)
         menubar.add_cascade(label = "Relatorios", menu = filemenu2)
-
         filemenu.add_command(label="Sair", command = Quit)
         filemenu2.add_command(label = "Limpar Cliente", command = self.limpa_cliente)
-
         filemenu2.add_command(label = "Ficha do cliente", command = self.gerarRelatorioCliente)
 
     def Janela2(self):

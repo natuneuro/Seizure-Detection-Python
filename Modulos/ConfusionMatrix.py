@@ -26,9 +26,9 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion Matix',
         plt.text(j,i,cm[i,j],
                 horizontalalignment="center",
                 color="white" if cm[i,j] > thresh else "black")
-
+    #print
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    plt.savefig('../Resultado.png')
+    plt.savefig('Resultado.png')
     #plt.show()

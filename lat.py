@@ -684,13 +684,16 @@ class Application(Funcs, Relatorios):
         self.Boton_close.place(relx=0.70, rely=0.8, relwidth=0.20,relheight=0.10)
 
 
-
-        # classification_info é um array com a estrutura [accuracy, precision, cm]
-        #label2 = Label(self.root5, text='Info:')
-        #label2.config(font=('helvetica',14),bg="#DFEBE9")
-        #canvas3.create_window(65, 140, window=label2)
-        #resultado_image = PhotoImage(file="../Resultado.png")
-        #Label(self.root5, image=resultado_image, bg="#DFEBE9").place(x=300, y=55)
+        Resultado = "Resultado.png"
+        width = 600
+        height = 400
+        img = Image.open(Resultado)
+        img = img.resize((width,height), Image.ANTIALIAS)
+        self.accurancy  = ImageTk.PhotoImage(img)
+        canvas3.imageList = []
+        canvas3.pack()
+        canvas3.create_image(200, 300, anchor="w", image=self.accurancy)
+        canvas3.imageList.append(self.accurancy)
 
         label2 = Label(self.root5, text='Accurancy:')
         label2.config(font=('helvetica',14),bg="#DFEBE9")

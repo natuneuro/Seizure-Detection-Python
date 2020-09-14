@@ -15,6 +15,9 @@ from PIL import Image, ImageTk
 import sqlite3
 from Modulos import LeituraArquivos,ConfusionMatrix, ProcessamentoDoSinal, LeituraEventos, AssociaTrechoEvento, CriaImagen, CNN
 
+
+Imagem1 = "ufmg _logo.png"
+
 # pyinstaller - ver tamanho da iamgem para capa
 # colocar as imagens para aparecer nos box : página resultados
 # tentar criar uma barra de progresso estilo do tutorial
@@ -74,7 +77,7 @@ class Relatorios():
 
         self.c.showPage()
         self.c.save()
-        self.printCliente()
+
 
 class Funcs():
     def limpa_cliente(self):
@@ -93,7 +96,6 @@ class Funcs():
 
     def montaTabelas(self):
         self.conecta_bd();
-        print("Conectando ao Banco de Dados")
         ### Criar Tabela
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS clientes(
@@ -106,7 +108,6 @@ class Funcs():
         
         """)
         self.conn.commit();
-        print("Banco de dados criado")
         self.desconecta_bd()
 
     def variaveis(self):
@@ -189,11 +190,9 @@ class Funcs():
 
     def buscar_arquivo(self,sinal_eeg, eventos):
         aux,nomeArquivo = LeituraArquivos.ImportarSinalEEG()
-        print(nomeArquivo)
         sinal_eeg.append(aux)
         aux2 = LeituraEventos.importar_evento()
         eventos.append(aux2)
-        print("Feito")
 
 #order by title ASC
 
@@ -300,35 +299,35 @@ class Application(Funcs, Relatorios):
 
         self.canvas_bt.place(relx = 0.19, rely=0.08, relwidth = 0.22, relheight=0.19)
         ## Criando botao limpar
-        self.bt_lipar = Button(self.aba1, text="Limpar", bd=2, bg='#14787A', 
+        self.bt_lipar = Button(self.aba1, text="Clean", bd=2, bg='#14787A', 
                                 activebackground='#108ecb', activeforeground='white', fg = 'white',
                                 font = ('verdana',9,'bold'), command= self.limpa_cliente)
         self.bt_lipar.place(relx=0.2, rely=0.1, relwidth=0.1,relheight=0.15)
 
         ## Criando botao buscar
-        self.bt_buscar = Button(self.aba1, text="Buscar", bd=2, bg='#14787A', 
+        self.bt_buscar = Button(self.aba1, text="Search", bd=2, bg='#14787A', 
                                 activebackground='#108ecb', activeforeground='white',fg = 'white',
                                 font = ('verdana',9,'bold'), command = self.busca_cliente)
         self.bt_buscar.place(relx=0.3, rely=0.1, relwidth=0.1,relheight=0.15)
 
-        texto_balao_buscar = "Digite no campo info o paciente que deseja pesquisar"
+        texto_balao_buscar = "Type in the info field the patient you want to search"
         self.balao_buscar = tix.Balloon(self.aba1)
         self.balao_buscar.bind_widget(self.bt_buscar, balloonmsg = texto_balao_buscar)
         
         ## Criando botao novo
-        self.bt_novo = Button(self.aba1, text="Novo", bd=2, bg='#14787A', 
+        self.bt_novo = Button(self.aba1, text="New", bd=2, bg='#14787A', 
                                 activebackground='#108ecb', activeforeground='white',fg = 'white',
                                 font = ('verdana',9,'bold'), command=self.add_cliente)
         self.bt_novo.place(relx=0.6, rely=0.1, relwidth=0.1,relheight=0.15)
 
         ## Criando botao alterar
-        self.bt_alterar = Button(self.aba1, text="Alterar", bd=2, bg='#14787A', 
+        self.bt_alterar = Button(self.aba1, text="Change", bd=2, bg='#14787A', 
                                 activebackground='#108ecb', activeforeground='white',fg = 'white',
                                 font = ('verdana',9,'bold'), command = self.alterar_cliente )
         self.bt_alterar.place(relx=0.7, rely=0.1, relwidth=0.1,relheight=0.15)
 
         ## Criando botao apagar
-        self.bt_apagar = Button(self.aba1, text="Apagar", bd=2, bg='#14787A', 
+        self.bt_apagar = Button(self.aba1, text="Delete", bd=2, bg='#14787A', 
                                 activebackground='#108ecb', activeforeground='white',fg = 'white',
                                 font = ('verdana',9,'bold'), command=self.deleta_cliente)
         self.bt_apagar.place(relx=0.8, rely=0.1, relwidth=0.1,relheight=0.15)
@@ -362,9 +361,8 @@ class Application(Funcs, Relatorios):
         self.popupMenu = OptionMenu(self.aba1, self.Tipvar1, *self.TipV1)
         self.popupMenu.place(relx=0.05, rely=0.45,relwidth=0.2)
         self.age_entry = self.Tipvar1.get()
-        print("############")
-        print(self.Tipvar1)
-        print("############")
+
+
 
         ## Criação da label e entrada da genero
         self.lb_genero = Label(self.aba1, text= "Gender :",bg="#DFEBE9", fg='#107db2')
@@ -376,7 +374,7 @@ class Application(Funcs, Relatorios):
         self.popupMenu = OptionMenu(self.aba1, self.Tipvar, *self.TipV)
         self.popupMenu.place(relx=0.05, rely=0.80,relwidth=0.3)
         self.gender_entry = self.Tipvar.get()
-        print(self.gender_entry)
+
 
         ## Criação da label e entrada da File
         self.lb_files = Label(self.aba1, text= "Files :",bg="#DFEBE9", fg='#107db2')
@@ -389,8 +387,6 @@ class Application(Funcs, Relatorios):
 
         self.info_entry = Entry(self.aba1)
         self.nomeArquivo_entry = self.info_entry
-        print(self.info_entry)
-        print(self.nomeArquivo_entry)
         self.nomeArquivo_entry.place(relx=0.5, rely=0.75,relwidth=0.4)
         self.info_entry.place(relx=0.5, rely=0.75,relwidth=0.4)
 
@@ -464,32 +460,44 @@ class Application(Funcs, Relatorios):
         self.root3.focus_force()
         self.root3.grab_set()
         
-        canvas = Canvas(self.root3,width = 1024, height = 768,  relief = 'raised', bg="#DFEBE9")
-        canvas.pack()
-        self.logo_ufmg = Image.open("logos/ufmg _logo.png")
-        self.resized_ufmg= self.logo_ufmg.resize((100,42), Image.ANTIALIAS)
-        canvas.image = self.resized_ufmg
-        canvas.create_image(64,55, image=self.resized_ufmg)
 
-        self.logo_ufmg = Image.open("logos/ufmg _logo.png")
-        self.resized_ufmg= self.logo_ufmg.resize((100,42), Image.ANTIALIAS)
-        self.logo_ufmg_resized=ImageTk.PhotoImage(self.resized_ufmg)
-        label = Label(image=self.logo_ufmg_resized,bg="#DFEBE9")
-        label.image = self.logo_ufmg_resized # keep a reference!
-        label.pack(side=LEFT, anchor=SE, padx=30, pady=30)
 
-        self.logo_labbio = Image.open("logos/labbio_logo.png")
-        self.resized_labbio= self.logo_labbio.resize((100,42), Image.ANTIALIAS)
-        self.logo_labbio_resized=ImageTk.PhotoImage(self.resized_labbio)
-        label = Label(image=self.logo_labbio_resized,bg="#DFEBE9")
-        label.image = self.logo_labbio_resized # keep a reference!
-        label.pack(side=LEFT, anchor=SE, padx=1, pady=30)
 
+    def Tela(self):
+        canvasroot3 = Canvas(self.root3, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
+        canvasroot3.pack()
+
+        self.Boton_close = Button(self.root3, text="Close",
+                     font=("AvantGarde", 20, "bold"), command= self.root.quit, bg="#14787A", fg="#ffffff",
+                     width="15", height="1", cursor="hand2")
+        self.Boton_close.place(relx=0.70, rely=0.8, relwidth=0.20,relheight=0.10)
+
+
+        width = 200
+        height = 200
+        img = Image.open("logos/cerebrito.png")
+        img = img.resize((width,height), Image.ANTIALIAS)
+
+        self.accurancy  = ImageTk.PhotoImage(img)
+        canvasroot3.imageList = []
+        canvasroot3.pack()
+        canvasroot3.create_image(900, 200, anchor="e", image=self.accurancy)
+        canvasroot3.imageList.append(self.accurancy)
+        label2 = Label(self.root3, text='Sobre o Projeto:')
+        label2.config(font=('helvetica',14),bg="#DFEBE9")
+        canvasroot3.create_window(100, 100, window=label2)
+
+        canvasroot3.create_text(200,200,fill="darkblue",font=('verdana',9,'bold'),
+                        text="Trabalho Desenvolvido pelo laboratório LABBIO")
 
 
     def JanelaAbout(self):
         self.root3 = Toplevel()
         self.tela3()
+        self.Tela()
+
+
+
 
 
     ############################################### SHOW PAT
@@ -652,7 +660,20 @@ class Application(Funcs, Relatorios):
     def Treinamento(self):
         canvas3 = Canvas(self.root5, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
         canvas3.pack()
-        # Recebe código do arthur e executa
+
+        #self.abas = ttk.Notebook(canvas3)
+        #self.aba1 = Frame(self.abas)
+        #self.aba2 = Frame(self.abas)
+
+        #self.aba1.configure(background='#DFEBE9')
+        #self.aba2.configure(background="lightgray")
+
+        #self.abas.add(self.aba1, text = "Aba 1")
+        #self.abas.add(self.aba2, text = "Aba 2")
+
+        #self.abas.place(relx = 0, rely = 0, relwidth=0.1, relheight=0.1)
+
+       # Recebe código do arthur e executa
         sinal_eeg = self.sinal_eeg[0]
         eventos = self.eventos[0]
 
@@ -670,9 +691,9 @@ class Application(Funcs, Relatorios):
         AssociaTrechoEvento.associa_trecho_evento(alpha_beta_dividido, eventos)
         AssociaTrechoEvento.associa_trecho_evento(gama_dividido, eventos)
 
-        self.root5.dados = CriaImagen.cria_imagens_saidas(gama_dividido, delta_theta_dividido, alpha_beta_dividido)
+        dados = CriaImagen.cria_imagens_saidas(gama_dividido, delta_theta_dividido, alpha_beta_dividido)
 
-        classification_info = CNN.CNN_fit(self.root5.dados[0], self.root5.dados[1])
+        classification_info = CNN.CNN_fit(dados[0], dados[1])
         cm_plot_labels = ["Normal", "Epilepsy"]
         ConfusionMatrix.plot_confusion_matrix(classification_info[2], cm_plot_labels, title="Confusion Matrix")
 
@@ -692,7 +713,7 @@ class Application(Funcs, Relatorios):
         self.accurancy  = ImageTk.PhotoImage(img)
         canvas3.imageList = []
         canvas3.pack()
-        canvas3.create_image(200, 300, anchor="w", image=self.accurancy)
+        canvas3.create_image(200, 230, anchor="w", image=self.accurancy)
         canvas3.imageList.append(self.accurancy)
 
         label2 = Label(self.root5, text='Accurancy:')
@@ -701,8 +722,7 @@ class Application(Funcs, Relatorios):
         label4 = Label(self.root5, text=classification_info[0])
         label4.config(font=('helvetica',14),bg="#DFEBE9")
         canvas3.create_window(100, 130, window=label4)
-        print("\nAccuracy:")
-        print(classification_info[0])
+
 
 
 

@@ -55,9 +55,11 @@ class Relatorios():
     def gerarRelatorioCliente(self):
         self.c = canvas.Canvas("cliente.pdf")
         self.codigoRel = self.codigo_entry.get()
-        #self.ageRel = self.age_entry.get()
+        self.ageRel = self.age_entry
         self.infoRel = self.info_entry.get()
-        #self.generoRel = self.gender_entry.get()
+        self.generoRel = self.gender_entry
+        #self.nomeArquivo = self.arquivo_name
+        #self.accuracy = self.accuracy_entry
         
         self.c.setFont("Helvetica-Bold", 24)
         self.c.drawString(200, 790, 'Ficha do Paciente')
@@ -67,17 +69,21 @@ class Relatorios():
         self.c.drawString(50,670, 'Age: ')
         self.c.drawString(50,630, 'Genero: ')
         self.c.drawString(50,600, 'Informações: ')
+        self.c.drawString(50,570, 'Nome Arquivo: ')
+        self.c.drawString(50,530, 'Dados do treinamento: ')
 
         self.c.setFont("Helvetica", 18)
         self.c.drawString(150,700, self.codigoRel)
-        #self.c.drawString(150,670, self.ageRel)
-        #self.c.drawString(150,630, self.generoRel)
+        self.c.drawString(150,670, self.ageRel)
+        self.c.drawString(150,630, self.generoRel)
         self.c.drawString(200,600, self.infoRel)
-        self.c.rect(20, 550, 550, 5, fill=True, stroke=False)
+        #self.c.drawString(200,570, self.nomeArquivo)
+        #self.c.drawString(200,530, self.accuracy)
+        self.c.rect(20, 300, 550, 5, fill=True, stroke=False)
 
         self.c.showPage()
         self.c.save()
-
+        self.printCliente()
 
 class Funcs():
     def limpa_cliente(self):
@@ -86,6 +92,7 @@ class Funcs():
         self.info_entry.delete(0, END)
         self.Tipvar.set('Male')
         self.nomeArquivo = ''
+        #self.accuracy = ''
 
     def conecta_bd(self):
         self.conn = sqlite3.connect("clientes.bd")
@@ -107,7 +114,8 @@ class Funcs():
             );
         
         """)
-        self.conn.commit();
+        # ADD  acurracy CHAR(40)
+        self.conn.commit()
         self.desconecta_bd()
 
     def variaveis(self):
@@ -116,13 +124,14 @@ class Funcs():
         self.genero =  self.Tipvar.get()
         self.info =  self.info_entry.get()
         self.nomeArquivo = self.nomeArquivo_entry.get()
+#        self.accuracy = self.accuracy.get()
 
     def add_cliente(self):
         self.variaveis()
         if self.nomeArquivo_entry.get()== "":
-            msg = "Para cadastrar um novo paciente eh necessario\n"
-            msg += "que seja selecionado os arquivos"
-            messagebox.showinfo("Cadastro de cliente - Aviso!!!", msg)
+            msg = "To register a new patient,\n"
+            msg += "it is necessary to select the files"
+            messagebox.showinfo("Customer registration - Warning !!!", msg)
         else :
 
             self.conecta_bd()
@@ -175,13 +184,24 @@ class Funcs():
         self.select_lista()
         self.limpa_cliente()
 
+#    def add_accuracy(self):
+#        self.variaveis()
+#        self.conecta_bd()
+#        self.cursor.execute("""  UPDATE clientes SET age = ?, info = ?, genero = ?, nomeArquivo = ?, accuracy = ?
+#            WHERE  codigo = ?  """, (self.age, self.info, self.genero, self.nomeArquivo, self.accuracy, self.codigo))
+#        self.conn.commit()
+#        self.desconecta_bd()
+#        self.select_lista()
+#        self.limpa_cliente()
+
     def busca_cliente(self):
         self.conecta_bd()
         self.listaCli.delete(*self.listaCli.get_children())
 
-        nomeArquivo = self.nomeArquivo_entry
+        codigo = self.codigo_entry.get()
+        print(codigo)
         self.cursor.execute("""  SELECT cod, age, info, genero, nomeArquivo FROM clientes
-            WHERE age LIKE '%s' ORDER BY nomeArquivo ASC""" % nomeArquivo)
+            WHERE cod LIKE '%s' ORDER BY cod ASC""" % codigo)
         buscaCli = self.cursor.fetchall()
         for i in buscaCli:
             self.listaCli.insert("", END, values=i)
@@ -523,6 +543,14 @@ class Application(Funcs, Relatorios):
 
         self.abas.place(relx = 0, rely = 0, relwidth=0.98, relheight=0.98)
 
+        self.codigo_entry = Entry(self.aba1)
+        self.Tipvar1 = StringVar()
+        self.Tipvar1.set("Child: 0-18")
+        self.age_entry = self.Tipvar1.get()
+
+        self.Tipvar = StringVar()
+        self.Tipvar.set("Male")
+        self.gender_entry = self.Tipvar.get()
 
         self.canvas_bt = Canvas(self.aba1,bd=0, bg='#1e3743', 
                                 highlightbackground = 'gray',
@@ -553,7 +581,7 @@ class Application(Funcs, Relatorios):
         self.codigo_entry.place(relx=0.05, rely=0.30,relwidth=0.08)
 
 
-    def lista_frame2(self):
+    def lista_frame4(self):
         self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5"))
         self.listaCli.heading("#0", text ="")
         self.listaCli.heading("#1", text ="Cod")
@@ -607,7 +635,7 @@ class Application(Funcs, Relatorios):
         self.tela4()
         self.frames_de_telaShowPat()
         self.widgets_frameShowPat()
-        self.lista_frame2()
+        self.lista_frame4()
         self.select_lista()
         self.MenusShowPaciente()
 

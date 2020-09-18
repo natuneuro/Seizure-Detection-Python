@@ -73,6 +73,8 @@ class Relatorios():
         self.c.setFont("Helvetica", 18)
         self.c.drawString(150,700, self.codigoRel)
         self.c.drawString(150,670, self.ageRel)
+
+
         self.c.drawString(150,630, self.generoRel)
         self.c.drawString(200,600, self.infoRel)
         #self.c.drawString(200,570, self.nomeArquivo)
@@ -306,7 +308,6 @@ class Application(Funcs, Relatorios):
         self.frame_2.place(relx=0.02,rely=0.5,relwidth=0.96,relheight=0.46)
 
     def widgets_frameAddPat(self):
-        nomeArquivo = ""
         self.abas = ttk.Notebook(self.frame_1)
         self.aba1 = Frame(self.abas)
         self.aba2 = Frame(self.abas)

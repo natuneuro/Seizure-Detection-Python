@@ -44,8 +44,6 @@ Imagem1 = "ufmg _logo.png"
 
 root = tix.Tk()
 # FILES
-sinal_eeg = []
-eventos = []
 
 
 class Relatorios():
@@ -123,12 +121,12 @@ class Funcs():
         self.age = self.Tipvar1.get()
         self.genero =  self.Tipvar.get()
         self.info =  self.info_entry.get()
-        self.nomeArquivo = self.nomeArquivo_entry.get()
+        self.nomeArquivo = self.nomeArquivo
 #        self.accuracy = self.accuracy.get()
 
     def add_cliente(self):
         self.variaveis()
-        if self.nomeArquivo_entry.get()== "":
+        if self.nomeArquivo == "":
             msg = "To register a new patient,\n"
             msg += "it is necessary to select the files"
             messagebox.showinfo("Customer registration - Warning !!!", msg)
@@ -163,7 +161,7 @@ class Funcs():
             col2 = self.age_entry
             col3 = self.gender_entry
             self.info_entry.insert(END, col4)
-            self.nomeArquivo_entry.insert(END,col5)
+            self.nomeArquivo.insert(END,col5)
 
     def deleta_cliente(self):
         self.variaveis()
@@ -208,25 +206,33 @@ class Funcs():
         self.limpa_cliente()
         self.desconecta_bd()
 
-    def buscar_arquivo(self,sinal_eeg, eventos):
-        aux,nomeArquivo = LeituraArquivos.ImportarSinalEEG()
-        sinal_eeg.append(aux)
-        aux2 = LeituraEventos.importar_evento()
-        eventos.append(aux2)
+
 
 #order by title ASC
 
 class Application(Funcs, Relatorios):
+
+
     def __init__(self):
         self.root = root
         self.root2 = root
         self.sinal_eeg = []
         self.eventos = []
+        self.nomeArquivo = ''
         self.tela()
         self.frames_de_tela()
         self.widgets_frame()
         self.montaTabelas()
+        
         root.mainloop()
+
+    def buscar_arquivo(self):
+        aux,self.nomeArquivo = LeituraArquivos.ImportarSinalEEG()
+        print(self.nomeArquivo)
+        self.sinal_eeg.append(aux)
+        aux2 = LeituraEventos.importar_evento()
+        self.eventos.append(aux2)
+
     
     def tela(self):
         self.root.title("Epilepsy Detection")
@@ -300,6 +306,7 @@ class Application(Funcs, Relatorios):
         self.frame_2.place(relx=0.02,rely=0.5,relwidth=0.96,relheight=0.46)
 
     def widgets_frameAddPat(self):
+        nomeArquivo = ""
         self.abas = ttk.Notebook(self.frame_1)
         self.aba1 = Frame(self.abas)
         self.aba2 = Frame(self.abas)
@@ -360,7 +367,7 @@ class Application(Funcs, Relatorios):
 
         ## Criando botao files
         self.bt_files = Button(self.aba1, text="Files", bd=2,
-                                font = ('verdana',9,'bold'), command = lambda:self.buscar_arquivo(self.sinal_eeg, self.eventos)) 
+                                font = ('verdana',9,'bold'), command = lambda:self.buscar_arquivo()) 
         self.bt_files.place(relx=0.5, rely=0.43, relwidth=0.1,relheight=0.15)
 
 
@@ -399,15 +406,13 @@ class Application(Funcs, Relatorios):
         ## Criação da label e entrada da File
         self.lb_files = Label(self.aba1, text= "Files :",bg="#DFEBE9", fg='#107db2')
         self.lb_files.place(relx=0.5, rely=0.3)
-
+        #self.nomeArquivo_entry =  self.nomeArquivo
+        #self.nomeArquivo_entry.place(relx=0.5, rely=0.75,relwidth=0.4)
 
         ## Criação da label e entrada da Info
         self.lb_info = Label(self.aba1, text= "Info :",bg="#DFEBE9", fg='#107db2')
         self.lb_info.place(relx=0.5, rely=0.6)
-
         self.info_entry = Entry(self.aba1)
-        self.nomeArquivo_entry = self.info_entry
-        self.nomeArquivo_entry.place(relx=0.5, rely=0.75,relwidth=0.4)
         self.info_entry.place(relx=0.5, rely=0.75,relwidth=0.4)
 
     def lista_frame2(self):
@@ -497,6 +502,7 @@ class Application(Funcs, Relatorios):
         height = 200
         img = Image.open("logos/cerebrito.png")
         img = img.resize((width,height), Image.ANTIALIAS)
+        print(nomeArquivo)
 
         self.accurancy  = ImageTk.PhotoImage(img)
         canvasroot3.imageList = []
@@ -609,6 +615,7 @@ class Application(Funcs, Relatorios):
         self.root4.config(menu = menubar)
         filemenu = Menu(menubar)
         filemenu2 = Menu(menubar)
+        filemenu = Menu(menubar)
 
         def Quit(): self.root4.destroy()
 
@@ -671,7 +678,7 @@ class Application(Funcs, Relatorios):
         menubar.add_cascade(label = "Opções", menu = filemenu)
         menubar.add_cascade(label = "Relatorio Paciente", menu = filemenu2)
         filemenu.add_command(label="Sair", command = Quit)
-        filemenu2.add_command(label = "Ficha do cliente", command = self.gerarRelatorioCliente)
+        filemenu2.add_command(label = "Ficha do client", command = self.gerarRelatorioCliente)
        
 
     def tela5(self):

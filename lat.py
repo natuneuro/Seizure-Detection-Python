@@ -45,6 +45,8 @@ Imagem1 = "ufmg _logo.png"
 root = tix.Tk()
 # FILES
 
+accuracyValue = "A"
+arquivoName = ""
 
 class Relatorios():
     def printCliente(self):
@@ -56,8 +58,8 @@ class Relatorios():
         self.ageRel = self.age_entry
         self.infoRel = self.info_entry.get()
         self.generoRel = self.gender_entry
-        #self.nomeArquivo = self.arquivo_name
-        #self.accuracy = self.accuracy_entry
+        self.accuracy = accuracyValue
+        self.nomeArquivo = arquivoName
         
         self.c.setFont("Helvetica-Bold", 24)
         self.c.drawString(200, 790, 'Ficha do Paciente')
@@ -77,8 +79,8 @@ class Relatorios():
 
         self.c.drawString(150,630, self.generoRel)
         self.c.drawString(200,600, self.infoRel)
-        #self.c.drawString(200,570, self.nomeArquivo)
-        #self.c.drawString(200,530, self.accuracy)
+        self.c.drawString(200,570, self.nomeArquivo)
+        self.c.drawString(300,530, self.accuracy)
         self.c.rect(20, 300, 550, 5, fill=True, stroke=False)
 
         self.c.showPage()
@@ -92,7 +94,7 @@ class Funcs():
         self.info_entry.delete(0, END)
         self.Tipvar.set('Male')
         self.nomeArquivo = ''
-        #self.accuracy = ''
+        self.accuracy_entry = ''
 
     def conecta_bd(self):
         self.conn = sqlite3.connect("clientes.bd")
@@ -110,7 +112,8 @@ class Funcs():
                 nomeArquivo CHAR(200) NOT NULL,
                 info CHAR(200),
                 age CHAR(50),
-                genero CHAR(40)
+                genero CHAR(40),
+                accuracy INT(40)
             );
         
         """)
@@ -118,16 +121,24 @@ class Funcs():
         self.conn.commit()
         self.desconecta_bd()
 
-    def variaveis(self):
+    def variaveis_inicio(self):
         self.codigo = self.codigo_entry.get()
         self.age = self.Tipvar1.get()
         self.genero =  self.Tipvar.get()
         self.info =  self.info_entry.get()
         self.nomeArquivo = self.nomeArquivo
-#        self.accuracy = self.accuracy.get()
+        self.accuracy = self.accuracy_entry
+
+    def variaveis_acao(self):
+        self.codigo = self.codigo_entry.get()
+        self.age = self.Tipvar1.get()
+        self.genero =  self.Tipvar.get()
+        self.info =  self.info_entry.get()
+        self.nomeArquivo = self.nomeArquivo
+        self.accuracy = self.accuracy_entry
 
     def add_cliente(self):
-        self.variaveis()
+        self.variaveis_inicio()
         if self.nomeArquivo == "":
             msg = "To register a new patient,\n"
             msg += "it is necessary to select the files"
@@ -136,17 +147,19 @@ class Funcs():
 
             self.conecta_bd()
 
-            self.cursor.execute(""" INSERT INTO clientes (age,genero, info, nomeArquivo)
-                VALUES(?, ?, ?, ?) """,(self.age, self.genero, self.info, self.nomeArquivo))
+            self.cursor.execute(""" INSERT INTO clientes (age,genero, info, accuracy, nomeArquivo)
+                VALUES(?, ?, ?, ?, ?) """,(self.age, self.genero, self.info, self.accuracy, self.nomeArquivo))
             self.conn.commit()
             self.desconecta_bd()
             self.select_lista()
             self.limpa_cliente()
+
+
     
     def select_lista(self):
         self.listaCli.delete(*self.listaCli.get_children())
         self.conecta_bd()
-        lista = self.cursor.execute(""" SELECT cod, age, genero , info, nomeArquivo FROM clientes 
+        lista = self.cursor.execute(""" SELECT cod, age, genero , info, accuracy, nomeArquivo FROM clientes 
             ORDER BY cod;  """)
 
         for i in lista:
@@ -158,27 +171,35 @@ class Funcs():
         self.listaCli.selection()
 
         for n in self.listaCli.selection():
-            col1, col2, col3, col4, col5 = self.listaCli.item(n, 'values')
+            print(self.listaCli.item(n, 'values'))
+            col1, col2, col3, col4, col5, col6 = self.listaCli.item(n, 'values')
             self.codigo_entry.insert(END, col1)
-            col2 = self.age_entry
-            col3 = self.gender_entry
             self.info_entry.insert(END, col4)
-            self.nomeArquivo.insert(END,col5)
+            self.nomeArquivo = col6
+            self.accuracy_entry = col5
+            self.Tipvar1.set(col2)
+            self.Tipvar.set(col3)
+            global accuracyValue 
+            accuracyValue = col5
+            global arquivoName 
+            arquivoName = col6
+
+
 
     def deleta_cliente(self):
-        self.variaveis()
+        self.variaveis_acao()
         self.conecta_bd()
-        self.cursor.execute(""" DELETE FROM clientes WHERE cod = ? """, (self.codigo))
+        self.cursor.execute(""" DELETE FROM clientes WHERE cod = ? """,(self.codigo))
         self.conn.commit()
         self.desconecta_bd()
         self.limpa_cliente()
         self.select_lista()
 
     def alterar_cliente(self):
-        self.variaveis()
+        self.variaveis_acao()
         self.conecta_bd()
-        self.cursor.execute("""  UPDATE clientes SET age = ?, info = ?, genero = ?, cod = ?
-            WHERE  nomeArquivo = ?  """, (self.age, self.info, self.genero, self.codigo, self.nomeArquivo))
+        self.cursor.execute("""  UPDATE clientes SET age = ?, info = ?, genero = ?, accuracy = ?, nomeArquivo = ?
+            WHERE  cod = ?  """, (self.age, self.info, self.genero, accuracyValue, arquivoName, self.codigo))
         self.conn.commit()
         self.desconecta_bd()
         self.select_lista()
@@ -199,8 +220,7 @@ class Funcs():
         self.listaCli.delete(*self.listaCli.get_children())
 
         codigo = self.codigo_entry.get()
-        print(codigo)
-        self.cursor.execute("""  SELECT cod, age, info, genero, nomeArquivo FROM clientes
+        self.cursor.execute("""  SELECT cod, age, info, genero, accuracy, nomeArquivo FROM clientes
             WHERE cod LIKE '%s' ORDER BY cod ASC""" % codigo)
         buscaCli = self.cursor.fetchall()
         for i in buscaCli:
@@ -213,14 +233,13 @@ class Funcs():
 #order by title ASC
 
 class Application(Funcs, Relatorios):
-
-
     def __init__(self):
         self.root = root
         self.root2 = root
         self.sinal_eeg = []
         self.eventos = []
         self.nomeArquivo = ''
+        self.accuracy_entry = ''
         self.tela()
         self.frames_de_tela()
         self.widgets_frame()
@@ -230,10 +249,16 @@ class Application(Funcs, Relatorios):
 
     def buscar_arquivo(self):
         aux,self.nomeArquivo = LeituraArquivos.ImportarSinalEEG()
-        print(self.nomeArquivo)
         self.sinal_eeg.append(aux)
         aux2 = LeituraEventos.importar_evento()
         self.eventos.append(aux2)
+
+
+    def comecar(self):
+        self.JanelaClassificacao()
+        self.accuracy_entry = self.accurancyValue_Entry
+        self.add_cliente()
+
 
     
     def tela(self):
@@ -307,6 +332,9 @@ class Application(Funcs, Relatorios):
         self.frame_2 = Frame(self.root2, bd=4, bg='#DFEBE9')
         self.frame_2.place(relx=0.02,rely=0.5,relwidth=0.96,relheight=0.46)
 
+
+    
+
     def widgets_frameAddPat(self):
         self.abas = ttk.Notebook(self.frame_1)
         self.aba1 = Frame(self.abas)
@@ -345,7 +373,7 @@ class Application(Funcs, Relatorios):
         ## Criando botao novo
         self.bt_novo = Button(self.aba1, text="New", bd=2, bg='#14787A', 
                                 activebackground='#108ecb', activeforeground='white',fg = 'white',
-                                font = ('verdana',9,'bold'), command=self.add_cliente)
+                                font = ('verdana',9,'bold'), command=self.comecar)
         self.bt_novo.place(relx=0.6, rely=0.1, relwidth=0.1,relheight=0.15)
 
         ## Criando botao alterar
@@ -361,10 +389,10 @@ class Application(Funcs, Relatorios):
         self.bt_apagar.place(relx=0.8, rely=0.1, relwidth=0.1,relheight=0.15)
 
         ## Criando botao Treinamento
-        self.bt_treinamento = Button(self.aba1, text="Classify", bd=2, bg='#00FFFF', 
-                                activebackground='yellow', activeforeground='black',fg = 'black',
-                                font = ('verdana',9,'bold'), command=self.JanelaClassificacao)             
-        self.bt_treinamento.place(relx=0.5, rely=0.1, relwidth=0.1,relheight=0.15)
+        #self.bt_treinamento = Button(self.aba1, text="Classify", bd=2, bg='#00FFFF', 
+        #                        activebackground='yellow', activeforeground='black',fg = 'black',
+        #                        font = ('verdana',9,'bold'), command=self.JanelaClassificacao)             
+        #self.bt_treinamento.place(relx=0.5, rely=0.1, relwidth=0.1,relheight=0.15)
 
         ## Criando botao files
         self.bt_files = Button(self.aba1, text="Files", bd=2,
@@ -417,20 +445,22 @@ class Application(Funcs, Relatorios):
         self.info_entry.place(relx=0.5, rely=0.75,relwidth=0.4)
 
     def lista_frame2(self):
-        self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5"))
+        self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5", "col6"))
         self.listaCli.heading("#0", text ="")
         self.listaCli.heading("#1", text ="Cod")
         self.listaCli.heading("#2", text ="Age")
         self.listaCli.heading("#3", text ="Gender")
         self.listaCli.heading("#4", text ="Info")
-        self.listaCli.heading("#5", text ="nomeArquivo")
+        self.listaCli.heading("#5", text="Accuracy")
+        self.listaCli.heading("#6", text ="nameArquivo")
 
         self.listaCli.column("#0", width=1)
         self.listaCli.column("#1", width=50)
         self.listaCli.column("#2", width=100)
         self.listaCli.column("#3", width=70)
-        self.listaCli.column("#4", width=170)
-        self.listaCli.column("#5", width=250)
+        self.listaCli.column("#4", width=100)
+        self.listaCli.column("#5", width=170)
+        self.listaCli.column("#6", width=250)
 
         self.listaCli.place(relx=0.01, rely=0.1, relwidth=0.95,relheight=0.85)
 
@@ -503,7 +533,6 @@ class Application(Funcs, Relatorios):
         height = 200
         img = Image.open("logos/cerebrito.png")
         img = img.resize((width,height), Image.ANTIALIAS)
-        print(nomeArquivo)
 
         self.accurancy  = ImageTk.PhotoImage(img)
         canvasroot3.imageList = []
@@ -589,7 +618,7 @@ class Application(Funcs, Relatorios):
 
 
     def lista_frame4(self):
-        self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5"))
+        self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5", "col6"))
         self.listaCli.heading("#0", text ="")
         self.listaCli.heading("#1", text ="Cod")
         self.listaCli.heading("#2", text ="Age")
@@ -756,6 +785,7 @@ class Application(Funcs, Relatorios):
         label2.config(font=('helvetica',14),bg="#DFEBE9")
         canvas3.create_window(100, 100, window=label2)
         label4 = Label(self.root5, text=classification_info[0])
+        self.accurancyValue_Entry = classification_info[0]
         label4.config(font=('helvetica',14),bg="#DFEBE9")
         canvas3.create_window(100, 130, window=label4)
 

@@ -13,8 +13,27 @@ import webbrowser
 from tkinter.filedialog import askopenfile, askopenfilename
 from PIL import Image, ImageTk
 import sqlite3
-from Modulos import LeituraArquivos,ConfusionMatrix, ProcessamentoDoSinal, LeituraEventos, AssociaTrechoEvento, CriaImagen, CNN
+import numpy as np
+import tensorflow as tf
+import math
+import sys
+import matplotlib.pyplot as plt
+from sklearn import preprocessing
+#from Modulos import LeituraArquivos,ConfusionMatrix, ProcessamentoDoSinal, LeituraEventos, AssociaTrechoEvento, CriaImagen, CNN
 
+
+from Modulos2 import (
+    CNN,
+    AssociaTrechoEvento,
+    ConfusionMatrix,
+    CriaImagen,
+    LeituraArquivos,
+    LeituraEventos,
+    ProcessamentoDoSinal,
+    CriaRede,
+    UsaRede,
+    graficos,
+)
 
 Imagem1 = "ufmg _logo.png"
 
@@ -43,9 +62,9 @@ Imagem1 = "ufmg _logo.png"
 
 
 root = tix.Tk()
-# FILES
-
 accuracyValue = "A"
+sensitivity ="A"
+specificity= "A"
 arquivoName = ""
 
 class Relatorios():
@@ -59,6 +78,8 @@ class Relatorios():
         self.infoRel = self.info_entry.get()
         self.generoRel = self.gender_entry
         self.accuracy = accuracyValue
+        self.sensitivity = sensitivity
+        self.specificity = specificity
         self.nomeArquivo = arquivoName
         
         self.c.setFont("Helvetica-Bold", 24)
@@ -74,7 +95,7 @@ class Relatorios():
 
         self.c.setFont("Helvetica", 18)
         self.c.drawString(150,700, self.codigoRel)
-        self.c.drawString(150,670, self.ageRel)
+        self.c.drawString(150,670, self.age_entry)
 
 
         self.c.drawString(150,630, self.generoRel)
@@ -90,11 +111,15 @@ class Relatorios():
 class Funcs():
     def limpa_cliente(self):
         self.codigo_entry.delete(0, END)
-        self.Tipvar1.set('Child: 0-18')
+        self.age_entry.delete(0, END)
         self.info_entry.delete(0, END)
         self.Tipvar.set('Male')
         self.nomeArquivo = ''
         self.accuracy_entry = ''
+        self.sensitivity_entry = ''
+        self.specificity_entry = ''
+
+
 
     def conecta_bd(self):
         self.conn = sqlite3.connect("clientes.bd")
@@ -111,9 +136,11 @@ class Funcs():
                 cod INTEGER PRIMARY KEY,
                 nomeArquivo CHAR(200) NOT NULL,
                 info CHAR(200),
-                age CHAR(50),
+                age INT(50),
                 genero CHAR(40),
-                accuracy INT(40)
+                accuracy INT(40),
+                sensitivity INT(40),
+                specificity INT(40)
             );
         
         """)
@@ -123,19 +150,23 @@ class Funcs():
 
     def variaveis_inicio(self):
         self.codigo = self.codigo_entry.get()
-        self.age = self.Tipvar1.get()
+        self.age = self.age_entry.get()
         self.genero =  self.Tipvar.get()
         self.info =  self.info_entry.get()
         self.nomeArquivo = self.nomeArquivo
         self.accuracy = self.accuracy_entry
+        self.sensitivity = self.sensitivity_entry
+        self.specificity = self.specificity_entry 
 
     def variaveis_acao(self):
         self.codigo = self.codigo_entry.get()
-        self.age = self.Tipvar1.get()
+        self.age = self.age_entry.get()
         self.genero =  self.Tipvar.get()
         self.info =  self.info_entry.get()
         self.nomeArquivo = self.nomeArquivo
         self.accuracy = self.accuracy_entry
+        self.sensitivity = self.sensitivity_entry
+        self.specificity = self.specificity_entry 
 
     def add_cliente(self):
         self.variaveis_inicio()
@@ -144,22 +175,18 @@ class Funcs():
             msg += "it is necessary to select the files"
             messagebox.showinfo("Customer registration - Warning !!!", msg)
         else :
-
             self.conecta_bd()
-
-            self.cursor.execute(""" INSERT INTO clientes (age,genero, info, accuracy, nomeArquivo)
-                VALUES(?, ?, ?, ?, ?) """,(self.age, self.genero, self.info, self.accuracy, self.nomeArquivo))
+            self.cursor.execute(""" INSERT INTO clientes (age,genero, info, accuracy, sensitivity, specificity, nomeArquivo)
+                VALUES(?, ?, ?, ?, ?, ?,?) """,(self.age, self.genero, self.info, self.accuracy,self.sensitivity, self.specificity, self.nomeArquivo))
             self.conn.commit()
             self.desconecta_bd()
             self.select_lista()
             self.limpa_cliente()
 
-
-    
     def select_lista(self):
         self.listaCli.delete(*self.listaCli.get_children())
         self.conecta_bd()
-        lista = self.cursor.execute(""" SELECT cod, age, genero , info, accuracy, nomeArquivo FROM clientes 
+        lista = self.cursor.execute(""" SELECT cod, age, genero , info, accuracy,sensitivity,specificity, nomeArquivo FROM clientes 
             ORDER BY cod;  """)
 
         for i in lista:
@@ -172,18 +199,23 @@ class Funcs():
 
         for n in self.listaCli.selection():
             print(self.listaCli.item(n, 'values'))
-            col1, col2, col3, col4, col5, col6 = self.listaCli.item(n, 'values')
+            col1, col2, col3, col4, col5, col6, col7, col8 = self.listaCli.item(n, 'values')
             self.codigo_entry.insert(END, col1)
             self.info_entry.insert(END, col4)
-            self.nomeArquivo = col6
+            self.nomeArquivo = col8
             self.accuracy_entry = col5
-            self.Tipvar1.set(col2)
+            self.sensitivity_entry =  col6
+            self.specificity_entry  = col7
+            self.age_entry.insert(END, col2)
             self.Tipvar.set(col3)
             global accuracyValue 
             accuracyValue = col5
+            global sensitivity
+            sensitivity = col6
+            global specificity
+            specificity = col7
             global arquivoName 
-            arquivoName = col6
-
+            arquivoName = col8
 
 
     def deleta_cliente(self):
@@ -198,29 +230,21 @@ class Funcs():
     def alterar_cliente(self):
         self.variaveis_acao()
         self.conecta_bd()
-        self.cursor.execute("""  UPDATE clientes SET age = ?, info = ?, genero = ?, accuracy = ?, nomeArquivo = ?
-            WHERE  cod = ?  """, (self.age, self.info, self.genero, accuracyValue, arquivoName, self.codigo))
+        self.cursor.execute("""  UPDATE clientes SET age = ?, info = ?, genero = ?, accuracy = ?, sensitivity=?, specificity=?,  nomeArquivo = ?
+            WHERE  cod = ?  """, (self.age, self.info, self.genero, accuracyValue, specificity,specificity, arquivoName, self.codigo))
         self.conn.commit()
         self.desconecta_bd()
         self.select_lista()
         self.limpa_cliente()
 
-#    def add_accuracy(self):
-#        self.variaveis()
-#        self.conecta_bd()
-#        self.cursor.execute("""  UPDATE clientes SET age = ?, info = ?, genero = ?, nomeArquivo = ?, accuracy = ?
-#            WHERE  codigo = ?  """, (self.age, self.info, self.genero, self.nomeArquivo, self.accuracy, self.codigo))
-#        self.conn.commit()
-#        self.desconecta_bd()
-#        self.select_lista()
-#        self.limpa_cliente()
+
 
     def busca_cliente(self):
         self.conecta_bd()
         self.listaCli.delete(*self.listaCli.get_children())
 
         codigo = self.codigo_entry.get()
-        self.cursor.execute("""  SELECT cod, age, info, genero, accuracy, nomeArquivo FROM clientes
+        self.cursor.execute("""  SELECT cod, age, info, genero, accuracy, sensitivity, specificity, nomeArquivo FROM clientes
             WHERE cod LIKE '%s' ORDER BY cod ASC""" % codigo)
         buscaCli = self.cursor.fetchall()
         for i in buscaCli:
@@ -228,9 +252,6 @@ class Funcs():
         self.limpa_cliente()
         self.desconecta_bd()
 
-
-
-#order by title ASC
 
 class Application(Funcs, Relatorios):
     def __init__(self):
@@ -240,6 +261,8 @@ class Application(Funcs, Relatorios):
         self.eventos = []
         self.nomeArquivo = ''
         self.accuracy_entry = ''
+        self.sensitivity_entry = ''
+        self.specificity_entry = ''
         self.tela()
         self.frames_de_tela()
         self.widgets_frame()
@@ -249,6 +272,7 @@ class Application(Funcs, Relatorios):
 
     def buscar_arquivo(self):
         aux,self.nomeArquivo = LeituraArquivos.ImportarSinalEEG()
+        print(self.nomeArquivo)
         self.sinal_eeg.append(aux)
         aux2 = LeituraEventos.importar_evento()
         self.eventos.append(aux2)
@@ -257,10 +281,11 @@ class Application(Funcs, Relatorios):
     def comecar(self):
         self.JanelaClassificacao()
         self.accuracy_entry = self.accurancyValue_Entry
+        self.sensitivity_entry = self.sensitivityValue_Entry
+        self.specificity_entry = self.specificityValue_Entry
         self.add_cliente()
 
 
-    
     def tela(self):
         self.root.title("Epilepsy Detection")
         self.root.config(bg="#DFEBE9")
@@ -409,14 +434,10 @@ class Application(Funcs, Relatorios):
 
         ## Criação da label e entrada da age - 
         self.lb_idade = Label(self.aba1, text= "Age :",bg="#DFEBE9", fg='#107db2')
+        self.age_entry = Entry(self.aba1)
         self.lb_idade.place(relx=0.05, rely=0.3)
+        self.age_entry.place(relx=0.05, rely=0.45,relwidth=0.2)
 
-        self.Tipvar1 = StringVar()
-        self.TipV1 = ("Child: 0-18","Adult: 19-59","Elderly: 60-")
-        self.Tipvar1.set("Child: 0-18")
-        self.popupMenu = OptionMenu(self.aba1, self.Tipvar1, *self.TipV1)
-        self.popupMenu.place(relx=0.05, rely=0.45,relwidth=0.2)
-        self.age_entry = self.Tipvar1.get()
 
 
 
@@ -435,8 +456,7 @@ class Application(Funcs, Relatorios):
         ## Criação da label e entrada da File
         self.lb_files = Label(self.aba1, text= "Files :",bg="#DFEBE9", fg='#107db2')
         self.lb_files.place(relx=0.5, rely=0.3)
-        #self.nomeArquivo_entry =  self.nomeArquivo
-        #self.nomeArquivo_entry.place(relx=0.5, rely=0.75,relwidth=0.4)
+
 
         ## Criação da label e entrada da Info
         self.lb_info = Label(self.aba1, text= "Info :",bg="#DFEBE9", fg='#107db2')
@@ -445,22 +465,26 @@ class Application(Funcs, Relatorios):
         self.info_entry.place(relx=0.5, rely=0.75,relwidth=0.4)
 
     def lista_frame2(self):
-        self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5", "col6"))
+        self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8"))
         self.listaCli.heading("#0", text ="")
         self.listaCli.heading("#1", text ="Cod")
         self.listaCli.heading("#2", text ="Age")
         self.listaCli.heading("#3", text ="Gender")
         self.listaCli.heading("#4", text ="Info")
-        self.listaCli.heading("#5", text="Accuracy")
-        self.listaCli.heading("#6", text ="nameArquivo")
+        self.listaCli.heading("#5", text="Accur.")
+        self.listaCli.heading("#6", text="Sensit.")
+        self.listaCli.heading("#7", text="Specif.")
+        self.listaCli.heading("#8", text ="Arquivo")
 
         self.listaCli.column("#0", width=1)
-        self.listaCli.column("#1", width=50)
-        self.listaCli.column("#2", width=100)
+        self.listaCli.column("#1", width=40)
+        self.listaCli.column("#2", width=40)
         self.listaCli.column("#3", width=70)
-        self.listaCli.column("#4", width=100)
-        self.listaCli.column("#5", width=170)
-        self.listaCli.column("#6", width=250)
+        self.listaCli.column("#4", width=120)
+        self.listaCli.column("#5", width=50)
+        self.listaCli.column("#6", width=50)
+        self.listaCli.column("#7", width=50)
+        self.listaCli.column("#8", width=150)
 
         self.listaCli.place(relx=0.01, rely=0.1, relwidth=0.95,relheight=0.85)
 
@@ -517,8 +541,6 @@ class Application(Funcs, Relatorios):
         self.root3.grab_set()
         
 
-
-
     def Tela(self):
         canvasroot3 = Canvas(self.root3, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
         canvasroot3.pack()
@@ -553,9 +575,6 @@ class Application(Funcs, Relatorios):
         self.Tela()
 
 
-
-
-
     ############################################### SHOW PAT
     def frames_de_telaShowPat(self):
         self.frame_1 = Frame(self.root4, bd=4, bg='#DFEBE9',
@@ -583,6 +602,9 @@ class Application(Funcs, Relatorios):
         self.Tipvar1 = StringVar()
         self.Tipvar1.set("Child: 0-18")
         self.age_entry = self.Tipvar1.get()
+
+        self.info_entry = Entry(self.aba1)
+
 
         self.Tipvar = StringVar()
         self.Tipvar.set("Male")
@@ -618,20 +640,27 @@ class Application(Funcs, Relatorios):
 
 
     def lista_frame4(self):
-        self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5", "col6"))
+        self.listaCli = ttk.Treeview(self.frame_2, height=3, column=("col1", "col2", "col3", "col4", "col5", "col6", "col7", "col8"))
         self.listaCli.heading("#0", text ="")
         self.listaCli.heading("#1", text ="Cod")
         self.listaCli.heading("#2", text ="Age")
         self.listaCli.heading("#3", text ="Gender")
         self.listaCli.heading("#4", text ="Info")
-        self.listaCli.heading("#5", text ="nomeArquivo")
+        self.listaCli.heading("#5", text="Accur.")
+        self.listaCli.heading("#6", text="Sensit.")
+        self.listaCli.heading("#7", text="Specif.")
+        self.listaCli.heading("#8", text ="Arquivo")
 
         self.listaCli.column("#0", width=1)
-        self.listaCli.column("#1", width=50)
-        self.listaCli.column("#2", width=100)
+        self.listaCli.column("#1", width=40)
+        self.listaCli.column("#2", width=40)
         self.listaCli.column("#3", width=70)
-        self.listaCli.column("#4", width=170)
-        self.listaCli.column("#5", width=250)
+        self.listaCli.column("#4", width=120)
+        self.listaCli.column("#5", width=50)
+        self.listaCli.column("#6", width=50)
+        self.listaCli.column("#7", width=50)
+        self.listaCli.column("#8", width=150)
+
 
         self.listaCli.place(relx=0.01, rely=0.1, relwidth=0.95,relheight=0.85)
 
@@ -722,26 +751,19 @@ class Application(Funcs, Relatorios):
         self.root5.focus_force()
         self.root5.grab_set()        
 
+
+
     def Treinamento(self):
         canvas3 = Canvas(self.root5, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
         canvas3.pack()
+        #self.frame_3 = Frame(self.root5, bd=4, bg='#DFEBE9',
+        #                        highlightbackground='#759fe6',
+        #                        highlightthickness=3)
+        #self.frame_3.place(relx=0.02,rely=0.02,relwidth=0.96,relheight=0.25)
 
-        #self.abas = ttk.Notebook(canvas3)
-        #self.aba1 = Frame(self.abas)
-        #self.aba2 = Frame(self.abas)
-
-        #self.aba1.configure(background='#DFEBE9')
-        #self.aba2.configure(background="lightgray")
-
-        #self.abas.add(self.aba1, text = "Aba 1")
-        #self.abas.add(self.aba2, text = "Aba 2")
-
-        #self.abas.place(relx = 0, rely = 0, relwidth=0.1, relheight=0.1)
-
-       # Recebe código do arthur e executa
+        #CriaRede.cria_modelo()
         sinal_eeg = self.sinal_eeg[0]
         eventos = self.eventos[0]
-
         fs = sinal_eeg.frequencia_de_amostragem
 
         sinal_delta_theta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([1, 7])
@@ -756,12 +778,57 @@ class Application(Funcs, Relatorios):
         AssociaTrechoEvento.associa_trecho_evento(alpha_beta_dividido, eventos)
         AssociaTrechoEvento.associa_trecho_evento(gama_dividido, eventos)
 
-        dados = CriaImagen.cria_imagens_saidas(gama_dividido, delta_theta_dividido, alpha_beta_dividido)
+        dados = CriaImagen.cria_imagens_saidas(
+            gama_dividido, delta_theta_dividido, alpha_beta_dividido)
 
-        classification_info = CNN.CNN_fit(dados[0], dados[1])
+        fft_imagens = []
+
+        for i in range(0, len(dados[0])):
+            fft = np.fft.fftn(dados[0][i])
+            fft = np.log(np.abs(np.fft.fftshift(fft) ** 2))
+            img_fft = tf.keras.preprocessing.image.array_to_img(fft)
+            array_fft = tf.keras.preprocessing.image.img_to_array(img_fft)
+            array_fft = array_fft * (1.0 / 255)
+            fft_imagens.append(array_fft)
+
+        fft_imagens = np.array(fft_imagens)
+
+        UsaRede.treina_rede(fft_imagens, dados[1])
+        cm = UsaRede.classifica_dados(fft_imagens, dados[1])
+        predictions = UsaRede.classifica_sem_saidas(fft_imagens)
         cm_plot_labels = ["Normal", "Epilepsy"]
-        ConfusionMatrix.plot_confusion_matrix(classification_info[2], cm_plot_labels, title="Confusion Matrix")
+        ConfusionMatrix.plot_confusion_matrix(cm, cm_plot_labels, title="Confusion Matrix")
 
+
+        TP = cm[1][1]
+        TN = cm[0][0]
+        FP = cm[1][0]
+        FN = cm[0][1]
+    
+        accuracy = (TP + TN) / (TP + FP + TN + FN)*100
+        print(accuracy)
+        formatted_accuracy = "{:.2f}".format(accuracy)
+        print(formatted_accuracy)
+
+        accuracy = formatted_accuracy
+        sensitivity=TP/(TP+FN)  # ADD DATASET
+        specificity=TN/(TN+FP)
+        print(TP)
+        if TP == 0:
+            sensitivity = 0
+        else:
+            sensitivity=TP/(TP+FN)   # ADD DATASET
+
+
+
+        predictions = UsaRede.classifica_sem_saidas(fft_imagens)
+        predictions = np.array(predictions)
+        # Fazer um para cada graf. - nomes no arquivo sinal eeg
+        nomes = ["FP1","FP2","F7","F3","FZ","F4","F8","A1","T3","C3","CZ","C4","T4","A2","T5","P3","Pz","P4","T6","O1","O2"]
+        for i in range(len(nomes)):
+            graficos.faz_graficos(sinal_eeg, nomes[i], gama_dividido, predictions, fs)
+            plt.savefig('Imagem'+str(i)+'.png')
+  
 
         ## Criando botao alterar
         self.Boton_close = Button(self.root5, text="Close",
@@ -784,12 +851,35 @@ class Application(Funcs, Relatorios):
         label2 = Label(self.root5, text='Accurancy:')
         label2.config(font=('helvetica',14),bg="#DFEBE9")
         canvas3.create_window(100, 100, window=label2)
-        label4 = Label(self.root5, text=classification_info[0])
-        self.accurancyValue_Entry = classification_info[0]
+        label4 = Label(self.root5, text=accuracy)
+        self.accurancyValue_Entry = accuracy
+        formatted_sensitivity = "{:.2f}".format(sensitivity)
+        sensitivity = formatted_sensitivity
+        formatted_specificity= "{:.2f}".format(specificity)
+        specificity = formatted_specificity
+        self.sensitivityValue_Entry = formatted_sensitivity
+        self.specificityValue_Entry = formatted_specificity
         label4.config(font=('helvetica',14),bg="#DFEBE9")
         canvas3.create_window(100, 130, window=label4)
 
 
+
+
+        label2 = Label(self.root5, text='Sensitivity:')
+        label2.config(font=('helvetica',14),bg="#DFEBE9")
+        canvas3.create_window(100, 160, window=label2)
+        label4 = Label(self.root5, text=sensitivity)
+        self.sensitivityValue_Entry = sensitivity
+        label4.config(font=('helvetica',14),bg="#DFEBE9")
+        canvas3.create_window(100, 190, window=label4)
+
+        label2 = Label(self.root5, text='Specificity:')
+        label2.config(font=('helvetica',14),bg="#DFEBE9")
+        canvas3.create_window(100, 210, window=label2)
+        label4 = Label(self.root5, text=specificity)
+        self.specificityValue_Entry = specificity
+        label4.config(font=('helvetica',14),bg="#DFEBE9")
+        canvas3.create_window(100, 240, window=label4)
 
 
     def JanelaClassificacao(self):
@@ -799,9 +889,5 @@ class Application(Funcs, Relatorios):
         self.widgets_frameClassification()
         self.MenusClassification()
         self.Treinamento()
-
-
-
-
 
 Application()

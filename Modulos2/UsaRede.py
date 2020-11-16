@@ -19,7 +19,7 @@ def treina_rede(entradas: ImagemEntrada, saidas):
         y_train,
         batch_size=1,
         validation_data=(X_test, y_test),
-        epochs=50,
+        epochs=20,
         verbose=1,
     )
 

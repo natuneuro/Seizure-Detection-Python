@@ -34,7 +34,7 @@ def faz_graficos(sinal_eeg, canal, gama_dividido, predictions, fs):
     predictions = np.array(predictions)
     plt.style.use("fivethirtyeight")
     fig, ax = plt.subplots()
-    ax.plot(sinal_eeg.canais[canal], linewidth=1, label="Normal")
+    ax.plot(sinal_eeg.canais[canal], linewidth=1)
     grafico_sobreposicao(sinal, gama_dividido, fs, ax)
     grafico_area(predictions, gama_dividido, fs, ax)
     return [fig, ax]

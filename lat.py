@@ -86,12 +86,12 @@ class Relatorios():
         self.c.drawString(200, 790, 'Ficha do Paciente')
 
         self.c.setFont("Helvetica-Bold", 18)
-        self.c.drawString(50,700, 'Código: ')
+        self.c.drawString(50,700, 'Cod: ')
         self.c.drawString(50,670, 'Age: ')
-        self.c.drawString(50,630, 'Genero: ')
-        self.c.drawString(50,600, 'Informações: ')
-        self.c.drawString(50,570, 'Nome Arquivo: ')
-        self.c.drawString(50,530, 'Dados do treinamento: ')
+        self.c.drawString(50,630, 'Gender: ')
+        self.c.drawString(50,600, 'Informations about: ')
+        self.c.drawString(50,570, 'File name: ')
+        self.c.drawString(50,530, 'Algorithm results: ')
 
         self.c.setFont("Helvetica", 18)
         self.c.drawString(150,700, self.codigoRel)
@@ -285,6 +285,19 @@ class Application(Funcs, Relatorios):
         self.specificity_entry = self.specificityValue_Entry
         self.add_cliente()
 
+    def comecar2(self):
+        self.JanelaClassificacao2()
+        self.accuracy_entry = self.accurancyValue_Entry
+        self.sensitivity_entry = self.sensitivityValue_Entry
+        self.specificity_entry = self.specificityValue_Entry
+        self.add_cliente()
+
+    def comecar3(self):
+        self.JanelaClassificacao3()
+        self.accuracy_entry = self.accurancyValue_Entry
+        self.sensitivity_entry = self.sensitivityValue_Entry
+        self.specificity_entry = self.specificityValue_Entry
+        self.add_cliente()
 
     def tela(self):
         self.root.title("Epilepsy Detection")
@@ -368,8 +381,8 @@ class Application(Funcs, Relatorios):
         self.aba1.configure(background='#DFEBE9')
         self.aba2.configure(background='#DFEBE9')
 
-        self.abas.add(self.aba1, text = "Aba 1")
-        self.abas.add(self.aba2, text = "Aba 2")
+        self.abas.add(self.aba1, text = " ")
+        self.abas.add(self.aba2, text = " ")
 
         self.abas.place(relx = 0, rely = 0, relwidth=0.98, relheight=0.98)
 
@@ -378,7 +391,7 @@ class Application(Funcs, Relatorios):
                                 highlightbackground = 'gray',
                                 highlightthickness=5)
 
-        self.canvas_bt.place(relx = 0.19, rely=0.08, relwidth = 0.22, relheight=0.19)
+        self.canvas_bt.place(relx = 0.19, rely=0.08, relwidth = 0.42, relheight=0.19)
         ## Criando botao limpar
         self.bt_lipar = Button(self.aba1, text="Clean", bd=2, bg='#14787A', 
                                 activebackground='#108ecb', activeforeground='white', fg = 'white',
@@ -394,24 +407,38 @@ class Application(Funcs, Relatorios):
         texto_balao_buscar = "Type in the info field the patient you want to search"
         self.balao_buscar = tix.Balloon(self.aba1)
         self.balao_buscar.bind_widget(self.bt_buscar, balloonmsg = texto_balao_buscar)
-        
-        ## Criando botao novo
-        self.bt_novo = Button(self.aba1, text="New", bd=2, bg='#14787A', 
-                                activebackground='#108ecb', activeforeground='white',fg = 'white',
-                                font = ('verdana',9,'bold'), command=self.comecar)
-        self.bt_novo.place(relx=0.6, rely=0.1, relwidth=0.1,relheight=0.15)
-
-        ## Criando botao alterar
-        self.bt_alterar = Button(self.aba1, text="Change", bd=2, bg='#14787A', 
-                                activebackground='#108ecb', activeforeground='white',fg = 'white',
-                                font = ('verdana',9,'bold'), command = self.alterar_cliente )
-        self.bt_alterar.place(relx=0.7, rely=0.1, relwidth=0.1,relheight=0.15)
 
         ## Criando botao apagar
         self.bt_apagar = Button(self.aba1, text="Delete", bd=2, bg='#14787A', 
                                 activebackground='#108ecb', activeforeground='white',fg = 'white',
                                 font = ('verdana',9,'bold'), command=self.deleta_cliente)
-        self.bt_apagar.place(relx=0.8, rely=0.1, relwidth=0.1,relheight=0.15)
+        self.bt_apagar.place(relx=0.4, rely=0.1, relwidth=0.1,relheight=0.15)
+
+        ## Criando botao alterar
+        self.bt_alterar = Button(self.aba1, text="Change", bd=2, bg='#14787A', 
+                                activebackground='#108ecb', activeforeground='white',fg = 'white',
+                                font = ('verdana',9,'bold'), command = self.alterar_cliente )
+        self.bt_alterar.place(relx=0.5, rely=0.1, relwidth=0.1,relheight=0.15)
+
+        ## Criando botao novo
+        self.bt_novo = Button(self.aba1, text="Classification", bd=2, bg='#1e3743', 
+                                activebackground='#108ecb', activeforeground='white',fg = 'white',
+                                font = ('verdana',11,'bold'), command=self.comecar)
+        self.bt_novo.place(relx=0.68, rely=0.1, relwidth=0.3,relheight=0.15)
+
+        ## Criando botao novo
+        self.bt_novo2 = Button(self.aba1, text="Predictions", bd=2, bg='#1e3743', 
+                                activebackground='#108ecb', activeforeground='white',fg = 'white',
+                                font = ('verdana',11,'bold'), command=self.comecar2)
+        self.bt_novo2.place(relx=0.68, rely=0.25, relwidth=0.3,relheight=0.15)
+
+        ## Criando botao novo
+        self.bt_novo2 = Button(self.aba1, text="Train", bd=2, bg='#1e3743', 
+                                activebackground='#108ecb', activeforeground='white',fg = 'white',
+                                font = ('verdana',11,'bold'), command=self.comecar3)
+        self.bt_novo2.place(relx=0.68, rely=0.40, relwidth=0.3,relheight=0.15)
+
+
 
         ## Criando botao Treinamento
         #self.bt_treinamento = Button(self.aba1, text="Classify", bd=2, bg='#00FFFF', 
@@ -426,7 +453,7 @@ class Application(Funcs, Relatorios):
 
 
         ## Criação da label e entrada de código
-        self.lb_codigo = Label(self.aba1, text= "Código",bg="#DFEBE9", fg='#107db2')
+        self.lb_codigo = Label(self.aba1, text= "Code",bg="#DFEBE9", fg='#107db2')
         self.lb_codigo.place(relx=0.05, rely=0.05)
 
         self.codigo_entry = Entry(self.aba1)
@@ -501,11 +528,11 @@ class Application(Funcs, Relatorios):
 
         def Quit(): self.root2.destroy()
 
-        menubar.add_cascade(label = "Opções", menu = filemenu)
-        menubar.add_cascade(label = "Relatorios", menu = filemenu2)
-        filemenu.add_command(label="Sair", command = Quit)
-        filemenu2.add_command(label = "Limpar Cliente", command = self.limpa_cliente)
-        filemenu2.add_command(label = "Ficha do cliente", command = self.gerarRelatorioCliente)
+        menubar.add_cascade(label = "Options", menu = filemenu)
+        menubar.add_cascade(label = "Reports", menu = filemenu2)
+        filemenu.add_command(label="exit", command = Quit)
+        filemenu2.add_command(label = "Clean", command = self.limpa_cliente)
+        filemenu2.add_command(label = "Customer File", command = self.gerarRelatorioCliente)
        
 
     def tela2(self):
@@ -593,8 +620,8 @@ class Application(Funcs, Relatorios):
         self.aba1.configure(background='#DFEBE9')
         self.aba2.configure(background="lightgray")
 
-        self.abas.add(self.aba1, text = "Aba 1")
-        self.abas.add(self.aba2, text = "Aba 2")
+        self.abas.add(self.aba1, text = " ")
+        self.abas.add(self.aba2, text = " ")
 
         self.abas.place(relx = 0, rely = 0, relwidth=0.98, relheight=0.98)
 
@@ -614,25 +641,32 @@ class Application(Funcs, Relatorios):
                                 highlightbackground = 'gray',
                                 highlightthickness=5)
 
-        self.canvas_bt.place(relx = 0.19, rely=0.06, relwidth = 0.22, relheight=0.40)
+        self.canvas_bt.place(relx = 0.19, rely=0.2, relwidth = 0.32, relheight=0.40)
         ## Criando botao limpar bg="#14787A", fg="#ffffff"
-        self.bt_lipar = Button(self.aba1, text="Limpar", bd=2, bg="#14787A",
+        self.bt_lipar = Button(self.aba1, text="Clean", bd=2, bg="#14787A",
                                 activebackground='#108ecb', activeforeground='white', fg="#ffffff",
                                 font = ('verdana',9,'bold'), command= self.limpa_cliente)
-        self.bt_lipar.place(relx=0.2, rely=0.1, relwidth=0.1,relheight=0.30)
+        self.bt_lipar.place(relx=0.2, rely=0.24, relwidth=0.1,relheight=0.30)
 
         ## Criando botao buscar
-        self.bt_buscar = Button(self.aba1, text="Buscar", bd=2, bg="#14787A", 
+        self.bt_buscar = Button(self.aba1, text="Search", bd=2, bg="#14787A", 
                                 activebackground='#108ecb', activeforeground='white',fg="#ffffff",
                                 font = ('verdana',9,'bold'), command = self.busca_cliente)
-        self.bt_buscar.place(relx=0.3, rely=0.1, relwidth=0.1,relheight=0.30)
+        self.bt_buscar.place(relx=0.3, rely=0.24, relwidth=0.1,relheight=0.30)
 
-        texto_balao_buscar = "Digite no campo info o paciente que deseja pesquisar"
+        texto_balao_buscar = "Type in the code field the patient you want to search"
         self.balao_buscar = tix.Balloon(self.aba1)
         self.balao_buscar.bind_widget(self.bt_buscar, balloonmsg = texto_balao_buscar)
+
+        ## Criando botao apagar
+        self.bt_apagar = Button(self.aba1, text="Delete", bd=2, bg='#14787A', 
+                                activebackground='#108ecb', activeforeground='white',fg = 'white',
+                                font = ('verdana',9,'bold'), command=self.deleta_cliente)
+        self.bt_apagar.place(relx=0.4, rely=0.24, relwidth=0.1,relheight=0.30)
+
         
         ## Criação da label e entrada de código
-        self.lb_codigo = Label(self.aba1, text= "Código",bg="#DFEBE9", fg='#107db2')
+        self.lb_codigo = Label(self.aba1, text= "Code",bg="#DFEBE9", fg='#107db2')
         self.lb_codigo.place(relx=0.05, rely=0.10)
 
         self.codigo_entry = Entry(self.aba1)
@@ -678,11 +712,11 @@ class Application(Funcs, Relatorios):
 
         def Quit(): self.root4.destroy()
 
-        menubar.add_cascade(label = "Opções", menu = filemenu)
-        menubar.add_cascade(label = "Relatorios", menu = filemenu2)
-        filemenu.add_command(label="Sair", command = Quit)
-        filemenu2.add_command(label = "Limpar Cliente", command = self.limpa_cliente)
-        filemenu2.add_command(label = "Ficha do cliente", command = self.gerarRelatorioCliente)
+        menubar.add_cascade(label = "Options", menu = filemenu)
+        menubar.add_cascade(label = "Reports", menu = filemenu2)
+        filemenu.add_command(label="exit", command = Quit)
+        filemenu2.add_command(label = "Clean", command = self.limpa_cliente)
+        filemenu2.add_command(label = "Customer File", command = self.gerarRelatorioCliente)
        
 
     def tela4(self):
@@ -734,10 +768,11 @@ class Application(Funcs, Relatorios):
 
         def Quit(): self.root5.destroy()
 
-        menubar.add_cascade(label = "Opções", menu = filemenu)
-        menubar.add_cascade(label = "Relatorio Paciente", menu = filemenu2)
-        filemenu.add_command(label="Sair", command = Quit)
-        filemenu2.add_command(label = "Ficha do client", command = self.gerarRelatorioCliente)
+        menubar.add_cascade(label = "Options", menu = filemenu)
+        menubar.add_cascade(label = "Reports", menu = filemenu2)
+        filemenu.add_command(label="exit", command = Quit)
+        filemenu2.add_command(label = "Clean", command = self.limpa_cliente)
+        filemenu2.add_command(label = "Customer File", command = self.gerarRelatorioCliente)
        
 
     def tela5(self):
@@ -749,19 +784,25 @@ class Application(Funcs, Relatorios):
         self.root5.minsize(width=500, height= 400)
         self.root5.transient(self.root2)
         self.root5.focus_force()
+        self.root5.grab_set()
+
+    def tela6(self):
+        self.root5.title("Prediction")
+        self.root5.config(bg="#DFEBE9")
+        self.root5.geometry("1024x768")
+        self.root5.resizable(True, True)
+        self.root5.maxsize(width=900, height= 700)
+        self.root5.minsize(width=500, height= 400)
+        self.root5.transient(self.root2)
+        self.root5.focus_force()
         self.root5.grab_set()        
+        
 
 
 
     def Treinamento(self):
         canvas3 = Canvas(self.root5, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
         canvas3.pack()
-        #self.frame_3 = Frame(self.root5, bd=4, bg='#DFEBE9',
-        #                        highlightbackground='#759fe6',
-        #                        highlightthickness=3)
-        #self.frame_3.place(relx=0.02,rely=0.02,relwidth=0.96,relheight=0.25)
-
-        #CriaRede.cria_modelo()
         sinal_eeg = self.sinal_eeg[0]
         eventos = self.eventos[0]
         fs = sinal_eeg.frequencia_de_amostragem
@@ -792,7 +833,6 @@ class Application(Funcs, Relatorios):
             fft_imagens.append(array_fft)
 
         fft_imagens = np.array(fft_imagens)
-
         UsaRede.treina_rede(fft_imagens, dados[1])
         cm = UsaRede.classifica_dados(fft_imagens, dados[1])
         predictions = UsaRede.classifica_sem_saidas(fft_imagens)
@@ -811,13 +851,13 @@ class Application(Funcs, Relatorios):
         print(formatted_accuracy)
 
         accuracy = formatted_accuracy
-        sensitivity=TP/(TP+FN)  # ADD DATASET
-        specificity=TN/(TN+FP)
+        sensitivity=TP/(TP+FN)*100  # ADD DATASET
+        specificity=TN/(TN+FP)*100
         print(TP)
         if TP == 0:
             sensitivity = 0
         else:
-            sensitivity=TP/(TP+FN)   # ADD DATASET
+            sensitivity=TP/(TP+FN)*100   # ADD DATASET
 
 
 
@@ -849,7 +889,7 @@ class Application(Funcs, Relatorios):
         canvas3.imageList.append(self.accurancy)
 
         label2 = Label(self.root5, text='Accurancy:')
-        label2.config(font=('helvetica',14),bg="#DFEBE9")
+        label2.config(font=("AvantGarde", 18, "bold"),fg="#14787A", bg="#DFEBE9")
         canvas3.create_window(100, 100, window=label2)
         label4 = Label(self.root5, text=accuracy)
         self.accurancyValue_Entry = accuracy
@@ -858,28 +898,28 @@ class Application(Funcs, Relatorios):
         formatted_specificity= "{:.2f}".format(specificity)
         specificity = formatted_specificity
         self.sensitivityValue_Entry = formatted_sensitivity
-        self.specificityValue_Entry = formatted_specificity
-        label4.config(font=('helvetica',14),bg="#DFEBE9")
+        self.specificityValue_Entry = formatted_specificity *100
+        label4.config(font=("AvantGarde", 14, "bold"), bg="#DFEBE9")
         canvas3.create_window(100, 130, window=label4)
 
 
 
 
         label2 = Label(self.root5, text='Sensitivity:')
-        label2.config(font=('helvetica',14),bg="#DFEBE9")
-        canvas3.create_window(100, 160, window=label2)
+        label2.config(font=("AvantGarde", 18, "bold"),fg="#14787A", bg="#DFEBE9")
+        canvas3.create_window(100, 200, window=label2)
         label4 = Label(self.root5, text=sensitivity)
         self.sensitivityValue_Entry = sensitivity
-        label4.config(font=('helvetica',14),bg="#DFEBE9")
-        canvas3.create_window(100, 190, window=label4)
+        label4.config(font=("AvantGarde", 14, "bold"), bg="#DFEBE9")
+        canvas3.create_window(100, 230, window=label4)
 
         label2 = Label(self.root5, text='Specificity:')
-        label2.config(font=('helvetica',14),bg="#DFEBE9")
-        canvas3.create_window(100, 210, window=label2)
+        label2.config(font=("AvantGarde", 18, "bold"),fg="#14787A", bg="#DFEBE9")
+        canvas3.create_window(100, 300, window=label2)
         label4 = Label(self.root5, text=specificity)
         self.specificityValue_Entry = specificity
-        label4.config(font=('helvetica',14),bg="#DFEBE9")
-        canvas3.create_window(100, 240, window=label4)
+        label4.config(font=("AvantGarde", 14, "bold"), bg="#DFEBE9")
+        canvas3.create_window(100, 330, window=label4)
 
 
     def JanelaClassificacao(self):
@@ -889,5 +929,233 @@ class Application(Funcs, Relatorios):
         self.widgets_frameClassification()
         self.MenusClassification()
         self.Treinamento()
+
+    def Treinamento2(self):
+        canvas3 = Canvas(self.root5, width = 1000, height = 500,  relief = 'raised', bg="#DFEBE9")
+        canvas3.pack()
+
+        sinal_eeg = self.sinal_eeg[0]
+        eventos = self.eventos[0]
+        fs = sinal_eeg.frequencia_de_amostragem
+
+        sinal_delta_theta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([1, 7])
+        sinal_alpha_beta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([8, 30])
+        sinal_gama = sinal_eeg.decomporSinalEmFaixaDeFrequencia([31, 100])
+
+        delta_theta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_delta_theta, fs)
+        alpha_beta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_alpha_beta, fs)
+        gama_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_gama, fs)
+
+        AssociaTrechoEvento.associa_trecho_evento(delta_theta_dividido, eventos)
+        AssociaTrechoEvento.associa_trecho_evento(alpha_beta_dividido, eventos)
+        AssociaTrechoEvento.associa_trecho_evento(gama_dividido, eventos)
+
+        dados = CriaImagen.cria_imagens_saidas(
+            gama_dividido, delta_theta_dividido, alpha_beta_dividido)
+
+        fft_imagens = []
+
+        for i in range(0, len(dados[0])):
+            fft = np.fft.fftn(dados[0][i])
+            fft = np.log(np.abs(np.fft.fftshift(fft) ** 2))
+            img_fft = tf.keras.preprocessing.image.array_to_img(fft)
+            array_fft = tf.keras.preprocessing.image.img_to_array(img_fft)
+            array_fft = array_fft * (1.0 / 255)
+            fft_imagens.append(array_fft)
+
+        fft_imagens = np.array(fft_imagens)
+
+        #UsaRede.treina_rede(fft_imagens, dados[1])
+        cm = UsaRede.classifica_dados(fft_imagens, dados[1])
+        predictions = UsaRede.classifica_sem_saidas(fft_imagens)
+        cm_plot_labels = ["Normal", "Epilepsy"]
+        ConfusionMatrix.plot_confusion_matrix(cm, cm_plot_labels, title="Confusion Matrix")
+
+
+        TP = cm[1][1]
+        TN = cm[0][0]
+        FP = cm[1][0]
+        FN = cm[0][1]
+    
+        accuracy = (TP + TN) / (TP + FP + TN + FN)*100
+        print(accuracy)
+        formatted_accuracy = "{:.2f}".format(accuracy)
+        print(formatted_accuracy)
+
+        accuracy = formatted_accuracy
+        sensitivity=TP/(TP+FN)*100  # ADD DATASET
+        specificity=TN/(TN+FP)*100
+        print(TP)
+        if TP == 0:
+            sensitivity = 0
+        else:
+            sensitivity=TP/(TP+FN)*100   # ADD DATASET
+
+
+
+        predictions = UsaRede.classifica_sem_saidas(fft_imagens)
+        predictions = np.array(predictions)
+        # Fazer um para cada graf. - nomes no arquivo sinal eeg
+        nomes = ["FP1","FP2","F7","F3","FZ","F4","F8","A1","T3","C3","CZ","C4","T4","A2","T5","P3","Pz","P4","T6","O1","O2"]
+        #for i in range(len(nomes)):
+        #    graficos.faz_graficos(sinal_eeg, nomes[i], gama_dividido, predictions, fs)
+        #    plt.savefig('Imagem'+str(i)+'.png')
+  
+        graficos.faz_graficos(sinal_eeg, nomes[0], gama_dividido, predictions, fs)
+        plt.savefig('Imagem'+str(0)+'.png')
+  
+        ## Criando botao alterar
+        self.Boton_close = Button(self.root5, text="Close",
+                     font=("AvantGarde", 20, "bold"), command= self.root5.quit, bg="#14787A", fg="#ffffff",
+                     width="15", height="1", cursor="hand2")
+        self.Boton_close.place(relx=0.70, rely=0.8, relwidth=0.20,relheight=0.10)
+
+
+        ## Criando botao alterar
+        self.canvas_bt = Canvas(self.root5,bd=0, bg='blue')
+        self.canvas_bt.place(relx = 0.1, rely=0.8, relwidth = 0.02, relheight=0.02)
+
+        ## Criando botao alterar
+        self.canvas_bt = Canvas(self.root5,bd=0, bg='green')
+        self.canvas_bt.place(relx = 0.1, rely=0.86, relwidth = 0.02, relheight=0.02)
+
+
+        ## Criando botao alterar
+        self.canvas_bt = Canvas(self.root5,bd=0, bg='red')
+        self.canvas_bt.place(relx = 0.1, rely=0.92, relwidth = 0.02, relheight=0.02)
+
+
+        self.Botao  = Button(self.root5, text="Normal",
+                     font=("AvantGarde", 10, "bold"), bg='#DFEBE9',
+                     width="5", height="1")
+        self.Botao.place(relx=0.15, rely=0.78, relwidth=0.1,relheight=0.05)
+
+        self.Botao  = Button(self.root5, text="Predictions",
+                     font=("AvantGarde", 10, "bold"), bg='#DFEBE9',
+                     width="5", height="1")
+        self.Botao.place(relx=0.15, rely=0.84, relwidth=0.1,relheight=0.05)
+
+        self.Botao  = Button(self.root5, text="Ictal",
+                     font=("AvantGarde", 10, "bold"), bg='#DFEBE9',
+                     width="5", height="1")
+        self.Botao.place(relx=0.15, rely=0.91, relwidth=0.1,relheight=0.05)
+
+
+        #labelNew2 = Label(self.root5, text='Normal')
+        #labelNew2.config(font=('helvetica',14),bg="#DFEBE9")
+        #canvas3.create_window(2, 10, window=labelNew2)
+
+        #labelNew3 = Label(self.root5, text='Normal')
+        #labelNew3.config(font=('helvetica',14),bg="#DFEBE9")
+        #canvas3.create_window(2, 10, window=labelNew3)
+
+
+
+        Resultado = "Imagem0.png"
+        width = 600
+        height = 400
+        img = Image.open(Resultado)
+        img = img.resize((width,height), Image.ANTIALIAS)
+        self.accurancy  = ImageTk.PhotoImage(img)
+        canvas3.imageList = []
+        canvas3.pack()
+        canvas3.create_image(200, 230, anchor="w", image=self.accurancy)
+        canvas3.imageList.append(self.accurancy)
+
+        label2 = Label(self.root5, text='Accurancy:')
+        label2.config(font=("AvantGarde", 18, "bold"),fg="#14787A", bg="#DFEBE9")
+        canvas3.create_window(100, 100, window=label2)
+        label4 = Label(self.root5, text=accuracy)
+        self.accurancyValue_Entry = accuracy
+        formatted_sensitivity = "{:.2f}".format(sensitivity)
+        sensitivity = formatted_sensitivity
+        formatted_specificity= "{:.2f}".format(specificity)
+        specificity = formatted_specificity
+        self.sensitivityValue_Entry = formatted_sensitivity
+        self.specificityValue_Entry = formatted_specificity *100
+        label4.config(font=("AvantGarde", 14, "bold"), bg="#DFEBE9")
+        canvas3.create_window(100, 130, window=label4)
+
+
+        label2 = Label(self.root5, text='Sensitivity:')
+        label2.config(font=("AvantGarde", 18, "bold"),fg="#14787A", bg="#DFEBE9")
+        canvas3.create_window(100, 200, window=label2)
+        label4 = Label(self.root5, text=sensitivity)
+        self.sensitivityValue_Entry = sensitivity
+        label4.config(font=("AvantGarde", 14, "bold"), bg="#DFEBE9")
+        canvas3.create_window(100, 230, window=label4)
+
+        label2 = Label(self.root5, text='Specificity:')
+        label2.config(font=("AvantGarde", 18, "bold"),fg="#14787A", bg="#DFEBE9")
+        canvas3.create_window(100, 300, window=label2)
+        label4 = Label(self.root5, text=specificity)
+        self.specificityValue_Entry = specificity
+        label4.config(font=("AvantGarde", 14, "bold"), bg="#DFEBE9")
+        canvas3.create_window(100, 330, window=label4)
+
+    def JanelaClassificacao2(self):
+        self.root5 = Toplevel()
+        self.tela6()
+        self.frames_de_telaClassification()
+        self.widgets_frameClassification()
+        self.MenusClassification()
+        self.Treinamento2()
+
+
+    def JanelaClassificacao3(self):
+        sinal_eeg = self.sinal_eeg[0]
+        eventos = self.eventos[0]
+        fs = sinal_eeg.frequencia_de_amostragem
+        sinal_delta_theta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([1, 7])
+        sinal_alpha_beta = sinal_eeg.decomporSinalEmFaixaDeFrequencia([8, 30])
+        sinal_gama = sinal_eeg.decomporSinalEmFaixaDeFrequencia([31, 100])
+        delta_theta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_delta_theta, fs)
+        alpha_beta_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_alpha_beta, fs)
+        gama_dividido = ProcessamentoDoSinal.dividir_sinal(sinal_gama, fs)
+        AssociaTrechoEvento.associa_trecho_evento(delta_theta_dividido, eventos)
+        AssociaTrechoEvento.associa_trecho_evento(alpha_beta_dividido, eventos)
+        AssociaTrechoEvento.associa_trecho_evento(gama_dividido, eventos)
+        dados = CriaImagen.cria_imagens_saidas(
+            gama_dividido, delta_theta_dividido, alpha_beta_dividido)
+        fft_imagens = []
+        for i in range(0, len(dados[0])):
+            fft = np.fft.fftn(dados[0][i])
+            fft = np.log(np.abs(np.fft.fftshift(fft) ** 2))
+            img_fft = tf.keras.preprocessing.image.array_to_img(fft)
+            array_fft = tf.keras.preprocessing.image.img_to_array(img_fft)
+            array_fft = array_fft * (1.0 / 255)
+            fft_imagens.append(array_fft)
+
+        fft_imagens = np.array(fft_imagens)
+        UsaRede.treina_rede(fft_imagens, dados[1])
+        cm = UsaRede.classifica_dados(fft_imagens, dados[1])
+        predictions = UsaRede.classifica_sem_saidas(fft_imagens)
+        cm_plot_labels = ["Normal", "Epilepsy"]
+        ConfusionMatrix.plot_confusion_matrix(cm, cm_plot_labels, title="Confusion Matrix")
+        TP = cm[1][1]
+        TN = cm[0][0]
+        FP = cm[1][0]
+        FN = cm[0][1]
+        accuracy = (TP + TN) / (TP + FP + TN + FN)*100
+        formatted_accuracy = "{:.2f}".format(accuracy)
+        accuracy = formatted_accuracy
+        sensitivity=TP/(TP+FN)*100  # ADD DATASET
+        specificity=TN/(TN+FP)*100
+        if TP == 0:
+            sensitivity = 0
+        else:
+            sensitivity=TP/(TP+FN)*100   # ADD DATASET
+        predictions = UsaRede.classifica_sem_saidas(fft_imagens)
+        predictions = np.array(predictions)
+        self.accurancyValue_Entry = accuracy
+        formatted_sensitivity = "{:.2f}".format(sensitivity)
+        sensitivity = formatted_sensitivity
+        formatted_specificity= "{:.2f}".format(specificity)
+        specificity = formatted_specificity
+        self.sensitivityValue_Entry = formatted_sensitivity
+        self.specificityValue_Entry = formatted_specificity *100
+        self.sensitivityValue_Entry = sensitivity
+        self.specificityValue_Entry = specificity
+    
 
 Application()

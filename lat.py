@@ -37,29 +37,6 @@ from Modulos2 import (
 
 Imagem1 = "ufmg _logo.png"
 
-# pyinstaller - ver tamanho da iamgem para capa
-# colocar as imagens para aparecer nos box : página resultados
-# tentar criar uma barra de progresso estilo do tutorial
-
-# Escrever textos:
-#   - Pagina about
-#   - Mudar pro inglês
-#   - Aba sobre o que tem q ser cadastrado
-# Melhorar aparencia:
-#   - Valor acuracia  
-#   - Retangulo azul da borda (tá feio)
-#
-# Dataset:
-#   - salvar valor acuracia
-#   - arrumar botão de alteração
-#   - criar versoes do botão buscar e colocar as opções no Mostrar Pac.
-#   - Conferir se tem q salvar mais algo
-#
-#  Imagens:
-#   - Pegar o código do Art. e add novas imagens no código de apresentação
-#   - Deixar o box criado
-#
-
 
 root = tix.Tk()
 accuracyValue = "A"

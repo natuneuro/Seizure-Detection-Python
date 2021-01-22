@@ -565,12 +565,22 @@ class Application(Funcs, Relatorios):
         canvasroot3.pack()
         canvasroot3.create_image(900, 200, anchor="e", image=self.accurancy)
         canvasroot3.imageList.append(self.accurancy)
-        label2 = Label(self.root3, text='Sobre o Projeto:')
+        label2 = Label(self.root3, text='About the porject:')
         label2.config(font=('helvetica',14),bg="#DFEBE9")
         canvasroot3.create_window(100, 100, window=label2)
 
         canvasroot3.create_text(200,200,fill="darkblue",font=('verdana',9,'bold'),
-                        text="Trabalho Desenvolvido pelo laboratório LABBIO")
+                        text="Epilepsy is a brain disease characterized by unprovoked \n" 
+                        "and recurrent seizures.  According to the World Health Organization (WHO),\n"
+                        "around 50 million people in the world suffer from this disease, though 70% of \n"
+                        "people effectively diagnosed and treated could live free seizure.  However, \n"
+                        "occasionally seizures cannot be controlled using drugs, in these cases, an automatic \n"
+                        "system of detection is highly required. Additionally, electroencephalogram (EEG) is one \n" 
+                        "of the most used clinical studies that provide valuable information for epilepsy diagnosis,\n "
+                        "for this reason, many researchers are including EEG databases in their works, to develop automatic \n "
+                        "systems for epilepsy detection. Hence, the objective of this app based on Convolutional Neural Networks (CNN), \n "
+                        "is to give a powerful clinical tool for medical personal to detect epilepsy through EEG studies. \n "                      
+                        ) #TODO - texto
 
 
     def JanelaAbout(self):

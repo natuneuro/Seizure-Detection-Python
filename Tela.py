@@ -750,12 +750,6 @@ class Application(Funcs, Relatorios):
             time.sleep(200)
             self.TreinamentoModelo()
             print("Treinou")
-            self.accuracy_entry = self.accurancyValue_Entry
-            self.recall_entry = self.recallValue_Entry
-            self.precision_entry = self.precisionValue_Entry
-            print("Add Cliente")
-            self.add_cliente()
-            print("Finalizou Treino e salvou cliente")
 
         #Imagens logs=os
         width = 500
@@ -847,7 +841,18 @@ class Application(Funcs, Relatorios):
 
         def Classificando():
             self.JanelaClassificacao()
+            print("ACCURACY ENTRY: " + self.accuracy_entry)
+            print("RECALL ENTRY: " + self.recall_entry)
+            print("PRECISION ENTRY: " + self.precision_entry)
+            self.accuracy_entry = self.accurancyValue_Entry
+            self.recall_entry = self.recallValue_Entry
+            self.precision_entry = self.precisionValue_Entry
+            print("ACCURACY ENTRY: " + self.accuracy_entry)
+            print("RECALL ENTRY: " + self.recall_entry)
+            print("PRECISION ENTRY: " + self.precision_entry)
+            print("Add Cliente")
             self.add_cliente()
+            print("Finalizou Treino e salvou cliente")
 
         #Imagens logs=os
         width = 500
@@ -917,7 +922,18 @@ class Application(Funcs, Relatorios):
 
         def Prediction():
             self.JanelaPrediction()
+            print("ACCURACY ENTRY: " + self.accuracy_entry)
+            print("RECALL ENTRY: " + self.recall_entry)
+            print("PRECISION ENTRY: " + self.precision_entry)
+            self.accuracy_entry = self.accurancyValue_Entry
+            self.recall_entry = self.recallValue_Entry
+            self.precision_entry = self.precisionValue_Entry
+            print("ACCURACY ENTRY: " + self.accuracy_entry)
+            print("RECALL ENTRY: " + self.recall_entry)
+            print("PRECISION ENTRY: " + self.precision_entry)
+            print("Add Cliente")
             self.add_cliente()
+            print("Finalizou Treino e salvou cliente")
 
         #Imagens logs=os
         width = 500
@@ -1306,7 +1322,7 @@ class Application(Funcs, Relatorios):
                                       cm_plot_labels,
                                       title="Confusion Matrix")
 
-        #plt.savefig('Resultado.png')
+        plt.savefig('Resultado.png')
 
         TP = cm[1][1]
         TN = cm[0][0]
@@ -1343,7 +1359,7 @@ class Application(Funcs, Relatorios):
         canvas4.create_image(200, 230, anchor="w", image=self.accurancy)
         canvas4.imageList.append(self.accurancy)
 
-        label2 = Label(self.root5, text='Accurancy:')
+        label2 = Label(self.root5, text='accurancy:')
         label2.config(font=("AvantGarde", 18, "bold"),
                       fg="#14787A",
                       bg="#DFEBE9")
